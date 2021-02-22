@@ -2,3 +2,7 @@ server:
   port: 8080
   servlet:
     context-path: /black-hole
+
+wx:
+  appid: wx12b97453f3499c24
+  secret: 9984c25cb5cd5cecda49bdc22271e177
