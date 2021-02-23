@@ -58,6 +58,8 @@ public class CertificationController {
         WxCreditInfoEntity wxCreditInfoEntity = null;
         String wxAppId = env.getProperty("WX_APPID");
         String wxAppSecret = env.getProperty("WX_APPSECRET");
+        log.error("wxAppId:" + wxAppId);
+        log.error("wxAppSecret:" + wxAppSecret);
         String cretResult = restTemplate.getForObject(
                 "https://api.weixin.qq.com/sns/jscode2session" +
                         "?appid=" + wxAppId +
