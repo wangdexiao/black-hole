@@ -2,3 +2,8 @@ server:
   port: 8080
   servlet:
     context-path: /black-hole
+logging:
+  level:
+    org.springframework.security: debug
+  file:
+    path: /home/black-hole-logs
