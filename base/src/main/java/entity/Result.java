@@ -16,7 +16,7 @@ public class Result<T> {
 
 
 
-    public static <T> Result<T> ok(String msg){
+    public static <T> Result<T> okMsg(String msg){
         Result<T> result = new Result<T>();
         result.code = OK;
         result.msg = msg;
@@ -24,7 +24,7 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> ok(T data){
+    public static <T> Result<T> okData(T data){
         Result<T> result = new Result<T>();
         result.code = OK;
         result.msg = "ok";

@@ -6,7 +6,6 @@ import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * 认证
@@ -45,7 +41,7 @@ public class CertificationController {
 
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public Result<WxCreditInfoEntity> login(HttpServletRequest request,String code){
+    public Result<String> login(HttpServletRequest request,String code){
         log.info("code:" + code);
 
         HttpHeaders headers = new HttpHeaders();
@@ -59,10 +55,6 @@ public class CertificationController {
         WxCreditInfoEntity wxCreditInfoEntity = null;
         String wxAppId = env.getProperty("WX_APPID");
         String wxAppSecret = env.getProperty("WX_APPSECRET");
-        log.error("wxAppId:" + wxAppId);
-        log.error("wxAppSecret:" + wxAppSecret);
-        wxAppId = System.getenv("WX_APPID");
-        wxAppSecret = System.getenv("WX_APPSECRET");
         log.error("wxAppId:" + wxAppId);
         log.error("wxAppSecret:" + wxAppSecret);
         String cretResult = restTemplate.getForObject(
@@ -87,7 +79,8 @@ public class CertificationController {
 
 
 //        log.info("code:" + wxCreditInfoResult.toString());
-        return errCode == 0 ? Result.ok(wxCreditInfoEntity) : Result.fail(errCode, errMsg, null);
+        assert wxCreditInfoEntity != null;
+        return errCode == 0 ? Result.okData(wxCreditInfoEntity.getOpenid()) : Result.fail(errCode, errMsg, null);
     }
 
 
@@ -95,6 +88,6 @@ public class CertificationController {
     public Result<Boolean> login(HttpHeaders headers){
         String openid = headers.getFirst("openid");
         boolean bool = loginStateContext.removeLoginState(openid);
-        return Result.ok(bool);
+        return Result.okData(bool);
     }
 }

@@ -46,6 +46,6 @@ public class ContentsController {
             contentVoList.add(contentVo);
         }
 
-        return Result.ok(contentVoList);
+        return Result.okData(contentVoList);
     }
 }
