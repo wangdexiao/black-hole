@@ -7,6 +7,7 @@ import entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 认证
@@ -27,11 +30,14 @@ public class CertificationController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${wx.appid}")
-    private String wxAppId;
+    @Autowired
+    private Environment env;
 
-    @Value("${wx.secret}")
-    private String wxAppSecret;
+//    @Value("${WXAPPID}")
+//    private String wxAppId;
+//
+//    @Value("${WXAPPSECRET}")
+//    private String wxAppSecret;
 
 
     @Autowired
@@ -50,6 +56,8 @@ public class CertificationController {
         String errMsg =null;
         int errCode = 0;
         WxCreditInfoEntity wxCreditInfoEntity = null;
+        String wxAppId = env.getProperty("WX_APPID");
+        String wxAppSecret = env.getProperty("WX_APPSECRET");
         String cretResult = restTemplate.getForObject(
                 "https://api.weixin.qq.com/sns/jscode2session" +
                         "?appid=" + wxAppId +
