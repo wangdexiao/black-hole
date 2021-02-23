@@ -46,6 +46,7 @@ public class CertificationController {
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result<WxCreditInfoEntity> login(HttpServletRequest request,String code){
+        log.info("code:" + code);
 
         HttpHeaders headers = new HttpHeaders();
 
