@@ -14,13 +14,90 @@
 
 
     <dependencies>
+        <!--base module-->
         <dependency>
             <groupId>com.free.badmood</groupId>
             <artifactId>base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
 <!--            <scope>compile</scope>-->
         </dependency>
+
+
+        <!--mybatis starter-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+<!--            <version>2.1.1</version>-->
+        </dependency>
+
+        <!--mybatis-plus starter-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+<!--            <version>3.3.2</version>-->
+        </dependency>
+
+
+        <!--数据库连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--阿里fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+<!--            <version>1.2.60</version>-->
+        </dependency>
+
+
+        <!--多数据源-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <!--company 配置-->
+        <profile>
+            <id>company</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>company</spring.profiles.active>
+            </properties>
+        </profile>
+
+
+        <!--生产配置-->
+        <profile>
+            <id>production</id>
+            <properties>
+                <spring.profiles.active>production</spring.profiles.active>
+            </properties>
+            <!--            <activation>-->
+            <!--                <activeByDefault>true</activeByDefault>-->
+            <!--            </activation>-->
+        </profile>
+
+
+        <!--home配置-->
+        <profile>
+            <id>home</id>
+            <properties>
+                <spring.profiles.active>home</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 
 </project>

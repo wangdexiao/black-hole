@@ -1,7 +1,8 @@
 package com.free.badmood.blackhole.filter;
 
 import com.free.badmood.blackhole.context.LoginStateContext;
-import entity.Result;
+import com.free.badmood.blackhole.context.MyContext;
+import com.free.badmood.blackhole.base.entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/getUserInfo","/logout"})
+@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/userinfo","/logout"})
 public class LoginStateFilter implements Filter {
 
     @Autowired
@@ -22,6 +23,7 @@ public class LoginStateFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String openid = ((HttpServletRequest) request).getHeader("openid");
         if(loginStateContext.existLoginState(openid)){
+            MyContext.OPENID.set(openid);
             chain.doFilter(request,response);
         }else {
             HttpServletResponse httpResponse = (HttpServletResponse) response;

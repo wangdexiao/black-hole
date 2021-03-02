@@ -1,4 +1,4 @@
-package entity;
+package com.free.badmood.blackhole.base.entity;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

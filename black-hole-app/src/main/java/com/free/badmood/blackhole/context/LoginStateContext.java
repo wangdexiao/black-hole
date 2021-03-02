@@ -30,4 +30,14 @@ public class LoginStateContext {
         }
 
     }
+
+    public WxCreditInfoEntity getWxCreditInfoByOpenId(String openId){
+        if(StringUtils.hasLength(openId)){
+            return loinStateMap.get(openId);
+        }else {
+            return null;
+        }
+
+    }
+
 }

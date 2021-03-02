@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${public-address}:3306/security?user=root&amp;password=root&amp;useUnicode=true&amp;characterEncoding=utf8mb4&amp;autoReconnect=true
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    #数据源其他配置，在DruidConfig配置类中手动绑定
+    initialSize: 8
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 1 from dual
+
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+    global-config:
+        db-config:
+            id-type: auto
+            logic-delete-field: del
+            logic-delete-value: 1
+            logic-not-delete-value: 0
+
+mybatis:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.sdy.roots.security.entity
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'refresh'
+logging:
+  level:
+    org.springframework.security: debug
+
+
+
+server:
+    servlet:
+        session:
+            cookie:
+                name: OAUTH2SESSION
+    address: 192.168.1.100
+
+
+web:
+  upload-path: D:/
+login-page: http://${public-address}:8099/pagelogin

@@ -3,7 +3,7 @@ package com.free.badmood.blackhole.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.free.badmood.blackhole.context.LoginStateContext;
 import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
-import entity.Result;
+import com.free.badmood.blackhole.base.entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -41,7 +41,7 @@ public class CertificationController {
 
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public Result<String> login(HttpServletRequest request,String code){
+    public Result<WxCreditInfoEntity> login(HttpServletRequest request,String code){
         log.info("code:" + code);
 
         HttpHeaders headers = new HttpHeaders();
@@ -80,7 +80,7 @@ public class CertificationController {
 
 //        log.info("code:" + wxCreditInfoResult.toString());
         assert wxCreditInfoEntity != null;
-        return errCode == 0 ? Result.okData(wxCreditInfoEntity.getOpenid()) : Result.fail(errCode, errMsg, null);
+        return errCode == 0 ? Result.okData(wxCreditInfoEntity) : Result.fail(errCode, errMsg, null);
     }
 
 

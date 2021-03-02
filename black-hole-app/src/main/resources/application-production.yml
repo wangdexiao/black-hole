@@ -1,0 +1,75 @@
+spring:
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      datasource:
+        master:
+          url: jdbc:mysql://139.9.137.30:23306/trace-source?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          username: block
+          password: qwer1234
+          driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
+        security:
+          url: jdbc:mysql://139.9.137.30:23306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          username: block
+          password: qwer1234
+          driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: del
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sdy.roots.security.entity
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'refresh'
+logging:
+  level:
+    org.springframework.security: debug
+  file:
+    path: /home/jars/lookroots/logs
+
+
+
+server:
+  servlet:
+    session:
+      cookie:
+        name: OAUTH2SESSION
+public-address: sy.sdyic.com
+
+
+web:
+  upload-path: /home/looktoots/upload/
+login-page: http://${public-address}/ts/#/pagelogin
+
+qrcode-photo-path: /home/looktoots/
+
+
+
+
+
+
+

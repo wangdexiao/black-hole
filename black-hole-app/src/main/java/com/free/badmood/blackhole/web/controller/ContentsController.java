@@ -1,7 +1,7 @@
 package com.free.badmood.blackhole.web.controller;
 
 import com.free.badmood.blackhole.web.entity.ContentVo;
-import entity.Result;
+import com.free.badmood.blackhole.base.entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
