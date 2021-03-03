@@ -29,6 +29,8 @@ public class TFUserServiceImpl extends ServiceImpl<TFUserMapper, TFUser> impleme
         return userMapper.selectOne(new LambdaQueryWrapper<TFUser>().eq(TFUser::getUnionid, unionId).eq(TFUser::getDel,0)) ;
     }
 
-
-
+    @Override
+    public TFUser queryUserByOpenId(String openId) {
+        return userMapper.selectOne(new LambdaQueryWrapper<TFUser>().eq(TFUser::getOpenId, openId).eq(TFUser::getDel,0)) ;
+    }
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/userinfo","/logout"})
+@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/userinfo","/logout","/article/add"})
 public class LoginStateFilter implements Filter {
 
     @Autowired

@@ -46,8 +46,8 @@ public class UserInfoEntity {
     private String avatarUrl;
 
 
-    @JsonProperty("openId")
-    private String openId;
+    @JsonProperty("openid")
+    private String openid;
 
     @JsonProperty("unionId")
     private String unionId;

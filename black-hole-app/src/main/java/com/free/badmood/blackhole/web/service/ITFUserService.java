@@ -21,4 +21,9 @@ public interface ITFUserService extends IService<TFUser> {
         return null;
     }
 
+
+    default TFUser queryUserByOpenId(String openId){
+        return null;
+    }
+
 }

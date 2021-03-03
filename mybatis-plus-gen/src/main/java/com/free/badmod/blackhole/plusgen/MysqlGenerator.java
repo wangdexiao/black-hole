@@ -53,7 +53,7 @@ public class MysqlGenerator {
 
         //todo 修改以下3项
         String moduleName = "black-hole-app";//配置哪个module文件生成在哪个module下
-        String baseEntityPath = "com.free.bodmood.blackhole.base.entity.BaseEntity";
+        String baseEntityPath = "com.free.badmood.blackhole.base.entity.BaseEntity";
         String baseControlPath = "com.free.bodmood.blackhole.base.controller.BaseController";
         // 数据源配置   根据那个数据库生产文件
         DataSourceConfig dsc = new DataSourceConfig();

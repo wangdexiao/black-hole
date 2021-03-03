@@ -39,8 +39,10 @@ public class PhotoFileUploadController {
             StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
             //获取formdata的值
             Iterator<String> iterator = req.getFileNames();
-//            String username = request.getParameter("username");
-//            String password = request.getParameter("password");
+            String articleId = request.getParameter("articleId");
+            log.error("文章id：" + articleId);
+            String userId = request.getParameter("userId");
+            log.error("用户id：" + userId);
 //            String timedata = request.getParameter("timedata");
 
             while (iterator.hasNext()) {
