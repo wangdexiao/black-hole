@@ -57,6 +57,7 @@ public class TFUserController extends BaseController {
         log.info("解密得到的用户信息为：" + decrypt);
         TFUser userInfo = JSONObject.parseObject(decrypt, TFUser.class);
         userInfo.setSessionKey(wxCreditInfoByOpenId.getSessionKey());
+        userInfo.setAvatarUrl(userInfo.getAvatarUrl());
         TFUser dbUser = tfUserService.queryUserByUnionId(userInfo.getUnionid());
         //已经存在该用户信息
         if (dbUser != null){

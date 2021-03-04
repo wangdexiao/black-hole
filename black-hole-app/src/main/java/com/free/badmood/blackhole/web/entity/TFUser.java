@@ -28,6 +28,8 @@ public class TFUser extends BaseEntity {
 
     private String nickName;
 
+    private String avatarUrl;
+
     private Integer gender;
 
     private String country;
