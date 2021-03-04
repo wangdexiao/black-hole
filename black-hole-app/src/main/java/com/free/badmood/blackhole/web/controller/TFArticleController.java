@@ -1,6 +1,8 @@
 package com.free.badmood.blackhole.web.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.context.MyContext;
@@ -48,6 +50,11 @@ public class TFArticleController extends BaseController {
     @Autowired
     private ITFUserService userService;
 
+    /**
+     * 添加文黯
+     * @param article 文黯实体
+     * @return
+     */
     @RequestMapping("/add")
     public Result<TFArticle> addArticle(TFArticle article){
         String openid = MyContext.OPENID.get();
@@ -85,6 +92,19 @@ public class TFArticleController extends BaseController {
             return Result.fail("发布文黯失败,保存文黯记录失败",article);
         }
 
+    }
+
+
+    /**
+     * 获取文黯
+     * @param page 页码数
+     * @param count 每页数量
+     * @return
+     */
+    @RequestMapping("/get")
+    public Result<Page<TFArticle>> getArticleByPage(int count,int page){
+        Page<TFArticle> aritcleByPage = articleService.getAritcleByPage(count,page);
+        return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
     }
 
 }
