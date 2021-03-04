@@ -123,6 +123,8 @@
                 <includes>
                     <!-- 项目打包完成的包中只包含当前环境文件 -->
                     <include>application.yml</include>
+                    <include>mapper/</include>
+                    <include>static/</include>
                     <include>application-${spring.profiles.active}.yml</include>
                     <include>banner.gif</include>
                     <include>banner.png</include>
