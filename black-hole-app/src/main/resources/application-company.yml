@@ -69,7 +69,7 @@ logging:
 upload-res-photo-dir: D:\black-hole-upload-res-dir\
 
 
-
+project-url: http://localhost:8080
 public-address: 10.10.10.134
 
 

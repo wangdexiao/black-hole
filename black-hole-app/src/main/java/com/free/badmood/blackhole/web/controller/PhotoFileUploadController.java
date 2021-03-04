@@ -24,6 +24,10 @@ public class PhotoFileUploadController {
     private String uploadResPhotoDir;
 
 
+    @Value("${project-url}")
+    private String projectUrl;
+
+
     @RequestMapping("/uploadPhotos")
     public String uploadPicture(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String filePath = "";
@@ -57,9 +61,7 @@ public class PhotoFileUploadController {
                 OutputStream out = new FileOutputStream(file1);
                 out.write(file.getBytes());
                 out.close();
-                filePath = request.getScheme() + "://" +
-                        request.getServerName() + ":"
-                        + request.getServerPort()
+                filePath = projectUrl
                         + request.getContextPath() + "/" + filename;
                 System.out.println("访问图片路径:" + filePath );
             }

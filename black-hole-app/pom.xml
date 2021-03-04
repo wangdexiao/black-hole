@@ -69,9 +69,9 @@
         <!--company 配置-->
         <profile>
             <id>company</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
             <properties>
                 <spring.profiles.active>company</spring.profiles.active>
             </properties>
@@ -84,9 +84,9 @@
             <properties>
                 <spring.profiles.active>production</spring.profiles.active>
             </properties>
-            <!--            <activation>-->
-            <!--                <activeByDefault>true</activeByDefault>-->
-            <!--            </activation>-->
+                        <activation>
+                            <activeByDefault>true</activeByDefault>
+                        </activation>
         </profile>
 
 
@@ -98,6 +98,41 @@
             </properties>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <!-- 打包后文件名称：项目名-环境-版本 -->
+        <finalName>${project.artifactId}-${spring.profiles.active}-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 开启过滤替换功能-->
+                <filtering>true</filtering>
+                <includes>
+                    <!-- 项目打包完成的包中只包含当前环境文件 -->
+                    <include>application.yml</include>
+                    <include>application-${spring.profiles.active}.yml</include>
+                    <include>banner.gif</include>
+                    <include>banner.png</include>
+                    <include>banner.jpg</include>
+                    <include>banner.txt</include>
+                    <include>logback-spring.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
 
 </project>

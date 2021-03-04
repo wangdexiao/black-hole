@@ -5,7 +5,7 @@ spring:
       strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
       datasource:
         master:
-          url: jdbc:mysql://139.9.137.30:23306/trace-source?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          url: jdbc:mysql://139.9.137.30:23306/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
           username: block
           password: qwer1234
           driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
@@ -49,23 +49,15 @@ logging:
   level:
     org.springframework.security: debug
   file:
-    path: /home/jars/lookroots/logs
+    path: /home/black-hole/logs
+
+
+upload-res-photo-dir: /home/black-hole-upload-res-dir/
+
+project-url: http://www.wadexi.xyz
 
 
 
-server:
-  servlet:
-    session:
-      cookie:
-        name: OAUTH2SESSION
-public-address: sy.sdyic.com
-
-
-web:
-  upload-path: /home/looktoots/upload/
-login-page: http://${public-address}/ts/#/pagelogin
-
-qrcode-photo-path: /home/looktoots/
 
 
 
