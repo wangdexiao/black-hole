@@ -28,6 +28,9 @@ spring:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
 
 mybatis-plus:
   global-config:
