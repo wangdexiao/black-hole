@@ -21,8 +21,6 @@ spring:
           driver-class-name: com.mysql.jdbc.Driver
   mvc:
     static-path-pattern: /**
-  resources:
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${upload-res-photo-dir}
   servlet:
     multipart:
       enabled: true
@@ -31,6 +29,23 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: true
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          cache-public: true
+          max-age: 2592000  # 资源缓存时间，单位秒，30天
+          no-cache: true #no-cache 强制所有缓存了该响应的用户，在使用已缓存的数据前，发送带验证器的请求到服务器。不是字面意思上的不缓存。
+      chain:
+        cache: true # 启用缓存
+        enabled: false # Enable the Spring Resource Handling chain. Disabled by default
+        strategy:
+          fixed:
+            enabled: false # 开启版本控制策略，默认为false
+            version: 1.0.0
+          content:
+            paths: /** # 指定要应用的版本的路径，多个以逗号分隔，默认为:[/**]
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${upload-res-photo-dir}
 
 mybatis-plus:
   global-config:
