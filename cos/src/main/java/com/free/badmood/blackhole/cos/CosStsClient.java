@@ -1,9 +1,6 @@
 package com.free.badmood.blackhole.cos;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.free.badmood.blackhole.cos.util.JsonUtils;
 import com.free.badmood.blackhole.cos.util.Request;
-import com.free.badmood.blackhole.cos.web.entity.CredentialsEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,7 +15,7 @@ public class CosStsClient {
     private static final int DEFAULT_DURATION_SECONDS = 1800;
     public static final String STS_DEFAULT_HOST = "sts.tencentcloudapi.com";
 
-    public static CredentialsEntity getCredential(TreeMap<String, Object> config) throws IOException {
+    public static JSONObject getCredential(TreeMap<String, Object> config) throws IOException {
         TreeMap<String, Object> params = new TreeMap<String, Object>();
         Parameters parameters = new Parameters();
         parameters.parse(config);
@@ -56,17 +53,39 @@ public class CosStsClient {
         }
         String path = "/";
 
-        String resultJsonString = null;
-        CredentialsEntity result = null;
+        String result = null;
+        JSONObject jsonResult = null;
         try {
-            resultJsonString = Request.send(params, (String) parameters.secretId,
+            result = Request.send(params, (String) parameters.secretId,
                     parameters.secretKey,
                     "POST", host, stsHost, path);
-            return JsonUtils.jsonToPojo(resultJsonString, CredentialsEntity.class);
+            jsonResult = new JSONObject(result);
+            JSONObject data = jsonResult.optJSONObject("Response");
+            if (data == null) {
+                data = jsonResult;
+            }
+            long expiredTime = data.getLong("ExpiredTime");
+            data.put("startTime", expiredTime - parameters.duration);
+            return downCompat(data);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (jsonResult != null) {
+                JSONObject response = jsonResult.optJSONObject("Response");
+                if (response != null) {
+                    JSONObject error = response.optJSONObject("Error");
+                    if (error != null) {
+                        String message = error.optString("Message");
+                        String code = error.optString("Code");
+                        if ("InvalidParameterValue".equals(code) && message != null && message.contains("Region")) {
+                            // Region is not recognized
+                            if (RegionCodeFilter.block(region)) {
+                                return getCredential(config);
+                            }
+                        }
+                    }
+                }
+            }
+            throw new IOException("result = " + result, e);
         }
-        return result;
     }
     
     public static String getPolicy(List<Scope> scopes) {

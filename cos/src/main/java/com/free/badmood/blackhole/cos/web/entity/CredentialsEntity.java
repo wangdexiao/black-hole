@@ -1,20 +1,22 @@
 package com.free.badmood.blackhole.cos.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @Data
 public class CredentialsEntity {
 
 
     /**
-     * credentials : {"tmpSecretId":"AKID_-89BXX8YdidSSQ-vNagr_ekAsBCowBz0NaHkbqqpiBDoYqVz0e1FIdPoP7JcPrA","tmpSecretKey":"WrL+5sbJvXnJl3l6QUbe7SBihG2IBfBo6H8xx7djgnU=","sessionToken":"FIyJjAQPsX3gG2fR4R0sYxenlTT4eLzac2a5efed711f7cf2331203f991c907a2rNPvvdIWccJIp7pv2RaGEmIO2Tl-vDid8CSpePn8qyfp8CT-vkZH0OBREj9MkuIIi4MLwV-fyZtbxZSWORSl-V415jP-FDOCGCwpz7I2_FS2p5ZXJ0vPvd8rmpZ8onbBHHGb5Oi9uqWmHTturOB9dwZIZ4AK_sNgJnI5LXWod5XtKTdmF-dNA7sVl7KgH12aAfHH0B8nMO2JUNnAEfQD2F_toIY55Sx-Lpu-pcJw4dEZE4AOAq5w-X9Asc-aZWbPqoS6CedO5EaPKRG9pjKPnd-gZFB-qcfJkxkSHjD39pe1fLU3f_tP2KW2dc6Lds0PE-MjVqD9FwjwquPrSoQTc4x0bRYx6e70tvzStlmQy2A7D1BONPNNNbZjHAoa4qMm6ZnGbpdmb8Tall8XEcdWYnb2zmapy5nkXciRHYlFu2MdqWqFdeZi3xQ51_Kly3Y2FXjaDfrtiVVMmsyjzniFqb_WzTvRuIuYdc4qxrZIo_jEeqjP-s9eLRv3A33KKsk_REvGR7l6vAD-dbhKbLckRT1JIh4p_qesEtEzMsE-B7SCFTwWuVqc3NqRiN4rf9zSkFsuKTqXLZNI94rOc_ysfQ"}
-     * requestId : 6f247c0a-6909-410f-8885-60cd350b8572
-     * expiration : 2021-03-10T02:40:24Z
-     * startTime : 1615342224
-     * expiredTime : 1615344024
+     * credentials : {"tmpSecretId":"AKIDgWh0KWsg0ueKpyGeqIcMzBe8nPTqqbkuzn5ZdQr6So3EgwKs77-Dl_TsoiG5BaFN","tmpSecretKey":"vRWtP/BIxXOFazOSpAq0NNdzjCXptLuq1Hl8HgEB/ho=","sessionToken":"80mPg2ncpbLONWdYLRRuRhqI6Qvp3ylacc39de5420b73e3a83704dbf0abe4d26wbVk7qNFRlnsiJAUj1vjTTmgSOp4LB_xBPdwRqb9bCrBZedGx5ymyhZ5XzP938SwXqRlux2AgdoYlulaG1d4M97X4YHVo4ryG2UbuJG_8vUu0i1VbJbfbxmAHm2Udj49HNvofil-RnmBF8eqSlfeqEFq97Y94dO_M5pfCKimj4MfuJNSce79GI6wFAmpQQL9aiSkDceGfBFDuhoKIcgvVvd3vOqKJrNas4Ima5MrZY69Og76ZUA2YTTMNHvEt41OjbeQnFe0Leszjq3dJ_Xa5buBOf0z09bwbioHGCV9JfXYO8giHI60ZM8UGvW6rb8Jz7xpFDeCobAqKi8y5NubVTKI_ZLQQdForXd-swkjRxXNU6Y3O_lgiZdui0sx0PKf_YLTpCW2RGuInUkRTOAOrO-2gaNBjWHF3T7HBjav_8TpkiHk-viRDX3xc1rI0O7ppWFdvLcJMYVhmK_l4Tw5t7LEYC6m5eXmtXD2mYMPB66JfxzuYX82GbtP-9-j9obs0y5sCs9lcxI6M2Qii5tqdXHDoj5Sk2pjiPnC6EaneeCZ2o4PJmibnnRc9yY2fR9v"}
+     * requestId : 2287c30d-ecc2-47e3-9323-ada30dbc61b4
+     * expiration : 2021-03-10T07:03:17Z
+     * startTime : 1615357997
+     * expiredTime : 1615359797
      */
 
     @JsonProperty("credentials")
@@ -24,17 +26,56 @@ public class CredentialsEntity {
     @JsonProperty("expiration")
     private String expiration;
     @JsonProperty("startTime")
-    private Integer startTime;
+    private int startTime;
     @JsonProperty("expiredTime")
-    private Integer expiredTime;
+    private int expiredTime;
 
-    @NoArgsConstructor
-    @Data
+    public CredentialsDTO getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(CredentialsDTO credentials) {
+        this.credentials = credentials;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(String expiration) {
+        this.expiration = expiration;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(int expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CredentialsDTO {
         /**
-         * tmpSecretId : AKID_-89BXX8YdidSSQ-vNagr_ekAsBCowBz0NaHkbqqpiBDoYqVz0e1FIdPoP7JcPrA
-         * tmpSecretKey : WrL+5sbJvXnJl3l6QUbe7SBihG2IBfBo6H8xx7djgnU=
-         * sessionToken : FIyJjAQPsX3gG2fR4R0sYxenlTT4eLzac2a5efed711f7cf2331203f991c907a2rNPvvdIWccJIp7pv2RaGEmIO2Tl-vDid8CSpePn8qyfp8CT-vkZH0OBREj9MkuIIi4MLwV-fyZtbxZSWORSl-V415jP-FDOCGCwpz7I2_FS2p5ZXJ0vPvd8rmpZ8onbBHHGb5Oi9uqWmHTturOB9dwZIZ4AK_sNgJnI5LXWod5XtKTdmF-dNA7sVl7KgH12aAfHH0B8nMO2JUNnAEfQD2F_toIY55Sx-Lpu-pcJw4dEZE4AOAq5w-X9Asc-aZWbPqoS6CedO5EaPKRG9pjKPnd-gZFB-qcfJkxkSHjD39pe1fLU3f_tP2KW2dc6Lds0PE-MjVqD9FwjwquPrSoQTc4x0bRYx6e70tvzStlmQy2A7D1BONPNNNbZjHAoa4qMm6ZnGbpdmb8Tall8XEcdWYnb2zmapy5nkXciRHYlFu2MdqWqFdeZi3xQ51_Kly3Y2FXjaDfrtiVVMmsyjzniFqb_WzTvRuIuYdc4qxrZIo_jEeqjP-s9eLRv3A33KKsk_REvGR7l6vAD-dbhKbLckRT1JIh4p_qesEtEzMsE-B7SCFTwWuVqc3NqRiN4rf9zSkFsuKTqXLZNI94rOc_ysfQ
+         * tmpSecretId : AKIDgWh0KWsg0ueKpyGeqIcMzBe8nPTqqbkuzn5ZdQr6So3EgwKs77-Dl_TsoiG5BaFN
+         * tmpSecretKey : vRWtP/BIxXOFazOSpAq0NNdzjCXptLuq1Hl8HgEB/ho=
+         * sessionToken : 80mPg2ncpbLONWdYLRRuRhqI6Qvp3ylacc39de5420b73e3a83704dbf0abe4d26wbVk7qNFRlnsiJAUj1vjTTmgSOp4LB_xBPdwRqb9bCrBZedGx5ymyhZ5XzP938SwXqRlux2AgdoYlulaG1d4M97X4YHVo4ryG2UbuJG_8vUu0i1VbJbfbxmAHm2Udj49HNvofil-RnmBF8eqSlfeqEFq97Y94dO_M5pfCKimj4MfuJNSce79GI6wFAmpQQL9aiSkDceGfBFDuhoKIcgvVvd3vOqKJrNas4Ima5MrZY69Og76ZUA2YTTMNHvEt41OjbeQnFe0Leszjq3dJ_Xa5buBOf0z09bwbioHGCV9JfXYO8giHI60ZM8UGvW6rb8Jz7xpFDeCobAqKi8y5NubVTKI_ZLQQdForXd-swkjRxXNU6Y3O_lgiZdui0sx0PKf_YLTpCW2RGuInUkRTOAOrO-2gaNBjWHF3T7HBjav_8TpkiHk-viRDX3xc1rI0O7ppWFdvLcJMYVhmK_l4Tw5t7LEYC6m5eXmtXD2mYMPB66JfxzuYX82GbtP-9-j9obs0y5sCs9lcxI6M2Qii5tqdXHDoj5Sk2pjiPnC6EaneeCZ2o4PJmibnnRc9yY2fR9v
          */
 
         @JsonProperty("tmpSecretId")
@@ -43,5 +84,29 @@ public class CredentialsEntity {
         private String tmpSecretKey;
         @JsonProperty("sessionToken")
         private String sessionToken;
+
+        public String getTmpSecretId() {
+            return tmpSecretId;
+        }
+
+        public void setTmpSecretId(String tmpSecretId) {
+            this.tmpSecretId = tmpSecretId;
+        }
+
+        public String getTmpSecretKey() {
+            return tmpSecretKey;
+        }
+
+        public void setTmpSecretKey(String tmpSecretKey) {
+            this.tmpSecretKey = tmpSecretKey;
+        }
+
+        public String getSessionToken() {
+            return sessionToken;
+        }
+
+        public void setSessionToken(String sessionToken) {
+            this.sessionToken = sessionToken;
+        }
     }
 }

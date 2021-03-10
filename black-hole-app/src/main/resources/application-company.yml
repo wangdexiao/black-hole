@@ -91,8 +91,15 @@ logging:
 upload-res-photo-dir: D:\black-hole-upload-res-dir\
 
 
-project-url: http://localhost:8080
+project-url: https://black-hole-1257902623.cos.ap-nanjing.myqcloud.com/
 public-address: 10.10.10.134
+
+
+cos:
+  secret-id: AKIDc3EBk3KwiRt87tFikjpjP5aolSLjLQpP
+  secret-key: Teb5ehV5QhxzZU9amcCf8zGH2YrxsekM
+  bucket: black-hole-1257902623
+  region: ap-nanjing
 
 
 #web:

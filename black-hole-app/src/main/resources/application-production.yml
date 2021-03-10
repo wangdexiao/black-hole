@@ -77,9 +77,13 @@ logging:
 
 upload-res-photo-dir: /home/black-hole-upload-res-dir/
 
-project-url: http://www.wadexi.xyz
+project-url: https://black-hole-1257902623.cos.ap-nanjing.myqcloud.com/
 
-
+cos:
+  secret-id: AKIDc3EBk3KwiRt87tFikjpjP5aolSLjLQpP
+  secret-key: Teb5ehV5QhxzZU9amcCf8zGH2YrxsekM
+  bucket: black-hole-1257902623
+  region: ap-nanjing
 
 
 

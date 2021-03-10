@@ -41,6 +41,9 @@ public class TFArticleController extends BaseController {
     @Value("${upload-res-photo-dir}")
     private String resPhotDir;
 
+    @Value("${project-url}")
+    private String projectUrl;
+
     @Autowired
     private ITFArticleService articleService;
 
@@ -74,8 +77,9 @@ public class TFArticleController extends BaseController {
             long articleId = article.getId();
             photoList.forEach(url -> {
                 TFArticleRes tfArticleRes = new TFArticleRes();
-                tfArticleRes.setFilepath(resPhotDir + url.substring(url.lastIndexOf("/")));
-                tfArticleRes.setUrl(url);
+                int startIndex = url.lastIndexOf("/") == -1 ? 0 : url.lastIndexOf("/");
+                tfArticleRes.setFilepath(resPhotDir + url.substring(startIndex));
+                tfArticleRes.setUrl(projectUrl + url);
                 tfArticleRes.setArticleId(articleId);
                 articleResList.add(tfArticleRes);
             });
