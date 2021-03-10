@@ -22,6 +22,19 @@
 <!--            <scope>compile</scope>-->
         </dependency>
 
+        <dependency>
+            <groupId>com.free.badmood</groupId>
+            <artifactId>cos</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>base</artifactId>
+                    <groupId>com.free.badmood</groupId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+
 
         <!--mybatis starter-->
         <dependency>

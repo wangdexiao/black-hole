@@ -7,6 +7,7 @@
         <module>base</module>
         <module>black-hole-app</module>
         <module>mybatis-plus-gen</module>
+        <module>cos</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
