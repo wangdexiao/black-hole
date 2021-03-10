@@ -82,9 +82,9 @@
         <!--company 配置-->
         <profile>
             <id>company</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
             <properties>
                 <spring.profiles.active>company</spring.profiles.active>
             </properties>
@@ -97,9 +97,9 @@
             <properties>
                 <spring.profiles.active>production</spring.profiles.active>
             </properties>
-<!--                        <activation>-->
-<!--                            <activeByDefault>true</activeByDefault>-->
-<!--                        </activation>-->
+                        <activation>
+                            <activeByDefault>true</activeByDefault>
+                        </activation>
         </profile>
 
 
@@ -132,7 +132,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <!-- 开启过滤替换功能-->
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <includes>
                     <!-- 项目打包完成的包中只包含当前环境文件 -->
                     <include>application.yml</include>
