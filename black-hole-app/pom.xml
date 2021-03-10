@@ -132,7 +132,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <!-- 开启过滤替换功能-->
-                <filtering>false</filtering>
+                <filtering>true</filtering>
                 <includes>
                     <!-- 项目打包完成的包中只包含当前环境文件 -->
                     <include>application.yml</include>
