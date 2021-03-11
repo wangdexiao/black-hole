@@ -37,6 +37,17 @@ public class TFArticle extends BaseEntity {
      */
     private String content;
 
+
+    /**
+     * 文黯发布的地名
+     */
+    private String addressName;
+
+    /**
+     * 文黯发布的详细地址
+     */
+    private String addressDetail;
+
     /**
      * 地理位置经度
      */
