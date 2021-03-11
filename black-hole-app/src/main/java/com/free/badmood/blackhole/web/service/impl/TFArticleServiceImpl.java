@@ -39,7 +39,7 @@ public class TFArticleServiceImpl extends ServiceImpl<TFArticleMapper, TFArticle
 
 
     public Page<TFArticle> getAritcleByPage(int count, int page){
-        Page<TFArticle> tfArticlePage = tfArticleMapper.selectPage(new Page<>(page, count), Wrappers.emptyWrapper());
+        Page<TFArticle> tfArticlePage = tfArticleMapper.selectPage(new Page<>(page, count), Wrappers.<TFArticle>lambdaQuery().orderByDesc(TFArticle::getUpdateTime));
         //todo 临时这么写
 
         List<TFArticle> records = tfArticlePage.getRecords();
