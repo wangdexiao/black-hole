@@ -2,9 +2,10 @@ package com.free.badmood.blackhole.web.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.constant.CommonConstant;
-import com.free.badmood.blackhole.context.LoginStateContext;
-import com.free.badmood.blackhole.context.MyContext;
+import com.free.badmood.blackhole.context.UserInfoContext;
+import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import com.free.badmood.blackhole.web.service.IUserService;
@@ -16,6 +17,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.free.badmood.blackhole.base.controller.BaseController;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,7 +39,7 @@ public class UserController extends BaseController {
     private Environment environment;
 
     @Autowired
-    private LoginStateContext loginStateContext;
+    private UserInfoContext userInfoContext;
 
 
     @Autowired
@@ -49,14 +52,15 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "/userinfo")
+    @RequireAuthentication
     public Result<User> decodeUserInfo(String iv, String rawData){
         String wxAppId = environment.getProperty(CommonConstant.WX_APPID);
-        String openid = MyContext.OPENID.get();
-        WxCreditInfoEntity wxCreditInfoByOpenId = loginStateContext.getWxCreditInfoByOpenId(openid);
-        String decrypt = WXCore.decrypt(wxAppId, rawData, wxCreditInfoByOpenId.getSessionKey(), iv);
+        String openid = OpenIdContext.OPENID.get();
+        User falseUser = userInfoContext.getUserInfoByOpenId(openid);
+        String decrypt = WXCore.decrypt(wxAppId, rawData, falseUser.getSessionKey(), iv);
         log.info("解密得到的用户信息为：" + decrypt);
         User userInfo = JSONObject.parseObject(decrypt, User.class);
-        userInfo.setSessionKey(wxCreditInfoByOpenId.getSessionKey());
+        userInfo.setSessionKey(falseUser.getSessionKey());
         userInfo.setAvatarUrl(userInfo.getAvatarUrl());
         User dbUser = tfUserService.queryUserByUnionId(userInfo.getUnionid());
         //已经存在该用户信息

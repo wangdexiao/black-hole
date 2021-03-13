@@ -1,7 +1,9 @@
 package com.free.badmood.blackhole.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.free.badmood.blackhole.context.LoginStateContext;
+import com.free.badmood.blackhole.annotations.RequireAuthentication;
+import com.free.badmood.blackhole.context.UserInfoContext;
+import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import com.free.badmood.blackhole.base.entity.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +40,7 @@ public class CertificationController {
 
 
     @Autowired
-    private LoginStateContext loginStateContext;
+    private UserInfoContext userInfoContext;
 
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
@@ -70,7 +73,10 @@ public class CertificationController {
                 errMsg = wxCreditInfoEntity.getErrmsg();
                 errCode = wxCreditInfoEntity.getErrcode();
                 if(errCode == 0){
-                    loginStateContext.addLoginState(wxCreditInfoEntity);
+                    User user = new User();
+                    user.setOpenId(wxCreditInfoEntity.getOpenid());
+                    user.setSessionKey(wxCreditInfoEntity.getSessionKey());
+                    userInfoContext.addUserInfo(user);
                 }
             }
         }else {
@@ -83,11 +89,12 @@ public class CertificationController {
         return errCode == 0 ? Result.okData(wxCreditInfoEntity) : Result.fail(errCode, errMsg, null);
     }
 
-
-    @RequestMapping(value = "/logout",method = RequestMethod.POST)
+    @PostMapping("/logout")
+    @RequireAuthentication
     public Result<Boolean> login(HttpHeaders headers){
         String openid = headers.getFirst("openid");
-        boolean bool = loginStateContext.removeLoginState(openid);
+        boolean bool = userInfoContext.removeUserInfo(openid);
         return Result.okData(bool);
     }
+
 }

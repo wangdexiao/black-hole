@@ -2,9 +2,10 @@ package com.free.badmood.blackhole.web.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
-import com.free.badmood.blackhole.context.MyContext;
+import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.free.badmood.blackhole.web.entity.User;
@@ -56,8 +57,9 @@ public class ArticleController extends BaseController {
      * @return
      */
     @RequestMapping("/add")
+    @RequireAuthentication
     public Result<Article> addArticle(Article article){
-        String openid = MyContext.OPENID.get();
+        String openid = OpenIdContext.OPENID.get();
         User user = userService.queryUserByOpenId(openid); //微信openid
         article.setUserId(user.getId());//用户id
         article.setReadCount(0);//默认阅读数为0
