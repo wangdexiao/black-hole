@@ -42,11 +42,7 @@ public class SupportController extends BaseController {
     @Autowired
     private IArticleService articleService;
 
-    /**
-     * 评论表service
-     */
-    @Autowired
-    private ICommentService commentService;
+
 
     @Autowired
     private IUserService userService;
@@ -68,7 +64,7 @@ public class SupportController extends BaseController {
         if(type == SupportType.SUPPORT_ARTICLE.ordinal()){
             existFlag = articleService.getById(typeId) != null;
         }else{
-            existFlag = commentService.getById(typeId) != null;
+            existFlag = supportService.getById(typeId) != null;
         }
 
         //如果存在改文黯或者评论
