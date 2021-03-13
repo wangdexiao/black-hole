@@ -1,6 +1,6 @@
 package com.free.badmood.blackhole.web.service;
 
-import com.free.badmood.blackhole.web.entity.TFArticleRes;
+import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author wadexi
  * @since 2021-03-03
  */
-public interface ITFArticleResService extends IService<TFArticleRes> {
+public interface IArticleResService extends IService<ArticleRes> {
 
 }

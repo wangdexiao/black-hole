@@ -1,6 +1,6 @@
 package com.free.badmood.blackhole.web.service;
 
-import com.free.badmood.blackhole.web.entity.TFUser;
+import com.free.badmood.blackhole.web.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,18 +11,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author wadexi
  * @since 2021-02-26
  */
-public interface ITFUserService extends IService<TFUser> {
+public interface IUserService extends IService<User> {
 
 
 
 
 
-    default TFUser queryUserByUnionId(String unionId){
+    default User queryUserByUnionId(String unionId){
         return null;
     }
 
 
-    default TFUser queryUserByOpenId(String openId){
+    default User queryUserByOpenId(String openId){
         return null;
     }
 

@@ -1,8 +1,8 @@
 package com.free.badmood.blackhole.context;
 
-import com.free.badmood.blackhole.web.entity.TFUser;
+import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
-import com.free.badmood.blackhole.web.service.ITFUserService;
+import com.free.badmood.blackhole.web.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,7 +14,7 @@ public class LoginStateContext {
 
 
     @Autowired
-    private ITFUserService userService;
+    private IUserService userService;
 
     private ConcurrentHashMap<String, WxCreditInfoEntity> loinStateMap = new ConcurrentHashMap<>();
 
@@ -34,11 +34,11 @@ public class LoginStateContext {
 
             boolean existUser = loinStateMap.containsKey(openId);
             if(!existUser){
-                TFUser tfUser = userService.queryUserByOpenId(openId);
-                if(tfUser != null){
+                User user = userService.queryUserByOpenId(openId);
+                if(user != null){
                     WxCreditInfoEntity creditInfoEntity = new WxCreditInfoEntity();
-                    creditInfoEntity.setOpenid(tfUser.getOpenId());
-                    creditInfoEntity.setSessionKey(tfUser.getSessionKey());
+                    creditInfoEntity.setOpenid(user.getOpenId());
+                    creditInfoEntity.setSessionKey(user.getSessionKey());
                     addLoginState(creditInfoEntity);
                     return true;
                 }

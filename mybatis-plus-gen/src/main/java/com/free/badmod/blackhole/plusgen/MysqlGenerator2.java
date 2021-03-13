@@ -60,11 +60,11 @@ public class MysqlGenerator2 {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/black_hole?useUnicode=true&serverTimezone=GMT&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true");
+        dsc.setUrl("jdbc:mysql://rm-2ze6u2746349q467olo.mysql.rds.aliyuncs.com:3306/black_hole?useUnicode=true&serverTimezone=GMT&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("Wdx123123123.");
+        dsc.setPassword("Wdx123123123");
         mpg.setDataSource(dsc);
 
         // 包配置

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TFUser extends BaseEntity {
+public class User extends BaseEntity {
 
 
     /**

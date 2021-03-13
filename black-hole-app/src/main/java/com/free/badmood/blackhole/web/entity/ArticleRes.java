@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TFArticleRes extends BaseEntity {
+public class ArticleRes extends BaseEntity {
 
 
     /**

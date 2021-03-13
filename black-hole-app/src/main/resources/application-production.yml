@@ -54,6 +54,7 @@ mybatis-plus:
       logic-delete-field: del
       logic-delete-value: 1
       logic-not-delete-value: 0
+      table-prefix: t_f_
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 

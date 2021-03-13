@@ -1,6 +1,6 @@
 package com.free.badmood.blackhole.web.mapper;
 
-import com.free.badmood.blackhole.web.entity.TFArticleRes;
+import com.free.badmood.blackhole.web.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author wadexi
- * @since 2021-03-03
+ * @since 2021-02-26
  */
 @Mapper
-public interface TFArticleResMapper extends BaseMapper<TFArticleRes> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

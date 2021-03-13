@@ -1,28 +1,25 @@
 package com.free.badmood.blackhole.web.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.context.MyContext;
-import com.free.badmood.blackhole.web.entity.TFArticle;
-import com.free.badmood.blackhole.web.entity.TFArticleRes;
-import com.free.badmood.blackhole.web.entity.TFUser;
-import com.free.badmood.blackhole.web.service.ITFArticleResService;
-import com.free.badmood.blackhole.web.service.ITFArticleService;
-import com.free.badmood.blackhole.web.service.ITFUserService;
+import com.free.badmood.blackhole.web.entity.Article;
+import com.free.badmood.blackhole.web.entity.ArticleRes;
+import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.service.IArticleResService;
+import com.free.badmood.blackhole.web.service.IArticleService;
+import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -45,13 +42,13 @@ public class TFArticleController extends BaseController {
     private String projectUrl;
 
     @Autowired
-    private ITFArticleService articleService;
+    private IArticleService articleService;
 
     @Autowired
-    private ITFArticleResService articleResService;
+    private IArticleResService articleResService;
 
     @Autowired
-    private ITFUserService userService;
+    private IUserService userService;
 
     /**
      * 添加文黯
@@ -59,10 +56,10 @@ public class TFArticleController extends BaseController {
      * @return
      */
     @RequestMapping("/add")
-    public Result<TFArticle> addArticle(TFArticle article){
+    public Result<Article> addArticle(Article article){
         String openid = MyContext.OPENID.get();
-        TFUser tfUser = userService.queryUserByOpenId(openid); //微信openid
-        article.setUserId(tfUser.getId());//用户id
+        User user = userService.queryUserByOpenId(openid); //微信openid
+        article.setUserId(user.getId());//用户id
         article.setReadCount(0);//默认阅读数为0
         article.setLatitude("0");//设置经纬度
         article.setLongitude("0");//
@@ -72,16 +69,16 @@ public class TFArticleController extends BaseController {
 
         //组装资源记录
         List<String> photoList = article.getPhotoArray();
-        final List<TFArticleRes> articleResList = new ArrayList<>();
+        final List<ArticleRes> articleResList = new ArrayList<>();
         if(saved){
             long articleId = article.getId();
             photoList.forEach(url -> {
-                TFArticleRes tfArticleRes = new TFArticleRes();
+                ArticleRes articleRes = new ArticleRes();
                 int startIndex = url.lastIndexOf("/") == -1 ? 0 : url.lastIndexOf("/");
-                tfArticleRes.setFilepath(resPhotDir + url.substring(startIndex));
-                tfArticleRes.setUrl(projectUrl + url);
-                tfArticleRes.setArticleId(articleId);
-                articleResList.add(tfArticleRes);
+                articleRes.setFilepath(resPhotDir + url.substring(startIndex));
+                articleRes.setUrl(projectUrl + url);
+                articleRes.setArticleId(articleId);
+                articleResList.add(articleRes);
             });
 
             // 保存文黯资源记录
@@ -106,8 +103,8 @@ public class TFArticleController extends BaseController {
      * @return
      */
     @RequestMapping("/get")
-    public Result<Page<TFArticle>> getArticleByPage(int count,int page){
-        Page<TFArticle> aritcleByPage = articleService.getAritcleByPage(count,page);
+    public Result<Page<Article>> getArticleByPage(int count, int page){
+        Page<Article> aritcleByPage = articleService.getAritcleByPage(count,page);
         return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
     }
 
