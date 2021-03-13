@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class TFUserController extends BaseController {
+public class UserController extends BaseController {
 
 
     @Autowired

@@ -16,6 +16,9 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.UUID;
 
+/**
+ * 暂时没有再用，使用了腾讯云cos
+ */
 @Slf4j
 @RestController
 public class PhotoFileUploadController {

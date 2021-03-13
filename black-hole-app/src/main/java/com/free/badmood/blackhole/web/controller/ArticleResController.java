@@ -16,6 +16,6 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @RequestMapping("/t-farticle-res")
-public class TFArticleResController extends BaseController {
+public class ArticleResController extends BaseController {
 
 }

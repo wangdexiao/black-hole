@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/article")
-public class TFArticleController extends BaseController {
+public class ArticleController extends BaseController {
 
     @Value("${upload-res-photo-dir}")
     private String resPhotDir;
