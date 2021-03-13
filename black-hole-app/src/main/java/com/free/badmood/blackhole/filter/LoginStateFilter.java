@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/userinfo","/logout","/article/add"})
+@WebFilter(filterName = "loginStateFilter",urlPatterns = {"/**"})
 public class LoginStateFilter implements Filter {
 
     @Autowired
@@ -28,6 +28,7 @@ public class LoginStateFilter implements Filter {
 //            writer.flush();
 //            writer.close();
 //        }
+        chain.doFilter(request,response);
     }
 
 }

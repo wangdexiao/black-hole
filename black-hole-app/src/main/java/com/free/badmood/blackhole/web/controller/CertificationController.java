@@ -1,11 +1,14 @@
 package com.free.badmood.blackhole.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
+import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -42,6 +45,9 @@ public class CertificationController {
     @Autowired
     private UserInfoContext userInfoContext;
 
+    @Autowired
+    private IUserService userService;
+
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result<WxCreditInfoEntity> login(HttpServletRequest request,String code){
@@ -76,7 +82,18 @@ public class CertificationController {
                     User user = new User();
                     user.setOpenId(wxCreditInfoEntity.getOpenid());
                     user.setSessionKey(wxCreditInfoEntity.getSessionKey());
+                    //todo 上线时释放开
+                    wxCreditInfoEntity.setSessionKey(null);
+                    OpenIdContext.OPENID.set(wxCreditInfoEntity.getOpenid());
+                    log.error("最新获得的sessionkey为：" + wxCreditInfoEntity.getSessionKey());
                     userInfoContext.addUserInfo(user);
+                    User dbUser = userService.queryUserByOpenId(user.getOpenId());
+                    if(dbUser != null){
+                        log.error("现在更新sessionkey");
+                        userService.update(Wrappers.<User>lambdaUpdate()
+                                .eq(User::getId, dbUser.getId())
+                                .set(User::getSessionKey, user.getSessionKey()));
+                    }
                 }
             }
         }else {

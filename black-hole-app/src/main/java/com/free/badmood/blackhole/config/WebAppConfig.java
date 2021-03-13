@@ -20,6 +20,6 @@ public class WebAppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //order 谁大先走谁
 //        registry.addWebRequestInterceptor(webInterfaceInterceptor).addPathPatterns("/support/add").order(2);
-        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/support/add").order(1);
+        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").order(1);
     }
 }

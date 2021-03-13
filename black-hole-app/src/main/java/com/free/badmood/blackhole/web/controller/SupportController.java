@@ -1,22 +1,22 @@
 package com.free.badmood.blackhole.web.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
+import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.constant.SupportType;
 import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Support;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.IArticleService;
-import com.free.badmood.blackhole.web.service.ICommentService;
 import com.free.badmood.blackhole.web.service.ISupportService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-import com.free.badmood.blackhole.base.controller.BaseController;
 
 /**
  * <p>
@@ -43,9 +43,11 @@ public class SupportController extends BaseController {
     private IArticleService articleService;
 
 
-
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private UserInfoContext userInfoContext;
 
 
 
@@ -70,7 +72,7 @@ public class SupportController extends BaseController {
         //如果存在改文黯或者评论
         if(existFlag){
             //获取用户的id
-            User user = userService.queryUserByOpenId(OpenIdContext.OPENID.get());
+            User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
             //设置用户id
             support.setUserId(user.getId());
             result = supportService.save(support);
@@ -79,8 +81,27 @@ public class SupportController extends BaseController {
         return Result.okData(result);
     }
 
-    public static void main(String[] args) {
-        System.out.println("" + SupportType.SUPPORT_ARTICLE.ordinal());
+    /**
+     * 添加点赞
+     */
+    @PostMapping("/cancel")
+    @RequireAuthentication
+    public Result<Boolean> cancelSupport(Support support){
+
+        long typeId = support.getTypeId();//文黯的id或者评论的id
+        int type = support.getType();
+        //获取用户的id
+        User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        long userId = user.getId();
+        boolean deltedFlag =
+                supportService.remove(Wrappers.<Support>lambdaQuery()
+                                        .eq(Support::getType,type)
+                                        .eq(Support::getTypeId,typeId)
+                                        .eq(Support::getUserId,userId));
+
+        return Result.okData(deltedFlag);
     }
+
+
 
 }

@@ -32,13 +32,19 @@ public class UserInfoContext {
         if(StringUtils.hasLength(openId)){
 
             User user = userInfoMap.get(openId);
-            if(user == null || user.getId() <= 0){
+            if(user == null ){
                 user = userService.queryUserByOpenId(openId);
                 if(user != null){
                     addUserInfo(user);
                     return true;
                 }
             }else {
+                if(user.getId() <=0){
+                    user = userService.queryUserByOpenId(openId);
+                    if(user != null){
+                        addUserInfo(user);
+                    }
+                }
                 return true;
             }
         }
