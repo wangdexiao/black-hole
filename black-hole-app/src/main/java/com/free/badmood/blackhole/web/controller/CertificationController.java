@@ -10,7 +10,6 @@ import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 认证
@@ -29,11 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class CertificationController {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
 //    @Value("${WXAPPID}")
 //    private String wxAppId;
@@ -42,15 +38,20 @@ public class CertificationController {
 //    private String wxAppSecret;
 
 
-    @Autowired
-    private UserInfoContext userInfoContext;
+    private final UserInfoContext userInfoContext;
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
+
+    public CertificationController(RestTemplate restTemplate, Environment env, UserInfoContext userInfoContext, IUserService userService) {
+        this.restTemplate = restTemplate;
+        this.env = env;
+        this.userInfoContext = userInfoContext;
+        this.userService = userService;
+    }
 
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public Result<WxCreditInfoEntity> login(HttpServletRequest request,String code){
+    public Result<WxCreditInfoEntity> login(String code){
         log.info("code:" + code);
 
         HttpHeaders headers = new HttpHeaders();
@@ -101,7 +102,7 @@ public class CertificationController {
         }
 
 
-//        log.info("code:" + wxCreditInfoResult.toString());
+
         assert wxCreditInfoEntity != null;
         return errCode == 0 ? Result.okData(wxCreditInfoEntity) : Result.fail(errCode, errMsg, null);
     }

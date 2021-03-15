@@ -57,12 +57,17 @@ public class UserInfoContext {
      * @return
      */
     public User getUserInfoByOpenId(String openId){
+        User user;
         if(StringUtils.hasLength(openId)){
-            return userInfoMap.get(openId);
+            user = userInfoMap.get(openId);
+            if (user == null){
+                user = userService.queryUserByOpenId(openId);
+                addUserInfo(user);
+            }
         }else {
             return null;
         }
-
+        return user;
     }
 
 }

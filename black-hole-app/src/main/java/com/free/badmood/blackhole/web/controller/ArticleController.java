@@ -13,7 +13,6 @@ import com.free.badmood.blackhole.web.service.IArticleResService;
 import com.free.badmood.blackhole.web.service.IArticleService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,19 +41,22 @@ public class ArticleController extends BaseController {
     @Value("${project-url}")
     private String projectUrl;
 
-    @Autowired
-    private IArticleService articleService;
+    private final IArticleService articleService;
 
-    @Autowired
-    private IArticleResService articleResService;
+    private final IArticleResService articleResService;
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
+
+    public ArticleController(IArticleService articleService, IArticleResService articleResService, IUserService userService) {
+        this.articleService = articleService;
+        this.articleResService = articleResService;
+        this.userService = userService;
+    }
 
     /**
      * 添加文黯
      * @param article 文黯实体
-     * @return
+     * @return Article
      */
     @RequestMapping("/add")
     @RequireAuthentication
@@ -102,7 +104,7 @@ public class ArticleController extends BaseController {
      * 获取文黯
      * @param page 页码数
      * @param count 每页数量
-     * @return
+     * @return Page<Article>
      */
     @RequestMapping("/get")
     public Result<Page<Article>> getArticleByPage(int count, int page){

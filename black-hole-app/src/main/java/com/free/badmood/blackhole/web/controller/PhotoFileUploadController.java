@@ -2,7 +2,6 @@ package com.free.badmood.blackhole.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +31,7 @@ public class PhotoFileUploadController {
 
 
     @RequestMapping("/uploadPhotos")
-    public String uploadPicture(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String uploadPicture(HttpServletRequest request/*, HttpServletResponse response*/) throws Exception {
         String filePath = "";
         request.setCharacterEncoding("utf-8"); //设置编码
 //        String realPath = request.getSession().getServletContext().getRealPath("/uploadFile/");

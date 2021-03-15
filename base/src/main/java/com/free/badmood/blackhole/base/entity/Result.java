@@ -40,6 +40,14 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result<T> fail(String errMsg){
+        Result<T> result = new Result<T>();
+        result.code = -1;
+        result.msg = errMsg;
+        result.data = null;
+        return result;
+    }
+
     public static <T> Result<T> fail(int errCode,String errMsg){
         Result<T> result = new Result<T>();
         result.code = errCode;

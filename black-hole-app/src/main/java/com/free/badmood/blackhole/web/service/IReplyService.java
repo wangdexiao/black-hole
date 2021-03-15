@@ -2,6 +2,7 @@ package com.free.badmood.blackhole.web.service;
 
 import com.free.badmood.blackhole.web.entity.Reply;
 import com.baomidou.mybatisplus.extension.service.IService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * <p>

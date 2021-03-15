@@ -1,6 +1,5 @@
 package com.free.badmood.blackhole.web.entity;
 
-import java.time.LocalDateTime;
 import com.free.badmood.blackhole.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +26,7 @@ public class Reply extends BaseEntity {
     /**
      * 回复目标id-文黯id
      */
-    private Integer replayId;
+    private long replayId;
 
     /**
      * 回复类型 0-对评论进行回复 1-对回复进行回复

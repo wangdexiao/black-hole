@@ -37,7 +37,7 @@ public class Comment extends BaseEntity {
     /**
      * 评论用户id
      */
-    private Integer fromUserId;
+    private long fromUserId;
 
 
 

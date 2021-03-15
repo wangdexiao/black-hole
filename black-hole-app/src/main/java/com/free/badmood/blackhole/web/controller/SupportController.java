@@ -12,8 +12,6 @@ import com.free.badmood.blackhole.web.entity.Support;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.IArticleService;
 import com.free.badmood.blackhole.web.service.ISupportService;
-import com.free.badmood.blackhole.web.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,22 +31,24 @@ public class SupportController extends BaseController {
     /**
      * 点赞表service
      */
-    @Autowired
-    private ISupportService supportService;
+    private final ISupportService supportService;
 
     /**
      * 文黯表service
      */
-    @Autowired
-    private IArticleService articleService;
+    private final IArticleService articleService;
 
 
-    @Autowired
-    private IUserService userService;
+//    private final IUserService userService;
 
-    @Autowired
-    private UserInfoContext userInfoContext;
+    private final UserInfoContext userInfoContext;
 
+    public SupportController(ISupportService supportService, IArticleService articleService, /*IUserService userService,*/ UserInfoContext userInfoContext) {
+        this.supportService = supportService;
+        this.articleService = articleService;
+//        this.userService = userService;
+        this.userInfoContext = userInfoContext;
+    }
 
 
     /**

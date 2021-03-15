@@ -3,22 +3,17 @@ package com.free.badmood.blackhole.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
-import com.free.badmood.blackhole.constant.CommonConstant;
-import com.free.badmood.blackhole.context.UserInfoContext;
-import com.free.badmood.blackhole.context.OpenIdContext;
-import com.free.badmood.blackhole.web.entity.User;
-import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
-import com.free.badmood.blackhole.web.service.IUserService;
+import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.base.utils.wxdecode.WXCore;
+import com.free.badmood.blackhole.constant.CommonConstant;
+import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UserInfoContext;
+import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import com.free.badmood.blackhole.base.controller.BaseController;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -35,21 +30,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController {
 
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Autowired
-    private UserInfoContext userInfoContext;
+    private final UserInfoContext userInfoContext;
 
 
-    @Autowired
-    private IUserService tfUserService;
+    private final IUserService tfUserService;
+
+    public UserController(Environment environment, UserInfoContext userInfoContext, IUserService tfUserService) {
+        this.environment = environment;
+        this.userInfoContext = userInfoContext;
+        this.tfUserService = tfUserService;
+    }
 
     /**
      * 解密用户信息（通过session_key（不能放到前端））
-     * @param iv
+     * @param iv iv
      * @param rawData 加密的用户数据
-     * @return
+     * @return User
      */
     @PostMapping(value = "/userinfo")
     @RequireAuthentication

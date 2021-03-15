@@ -4,6 +4,7 @@ import com.free.badmood.blackhole.web.entity.Reply;
 import com.free.badmood.blackhole.web.mapper.ReplyMapper;
 import com.free.badmood.blackhole.web.service.IReplyService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
