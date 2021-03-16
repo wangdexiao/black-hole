@@ -1,8 +1,7 @@
 package com.free.badmood.blackhole.web.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
@@ -10,6 +9,7 @@ import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
 import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.entity.UserCommentVo;
 import com.free.badmood.blackhole.web.service.ICommentService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,15 +60,17 @@ public class CommentController extends BaseController {
      * @return Page Comment
      */
     @PostMapping("/query")
-    public Result<Page<Comment>> queryByPage(long articleId,int page,int count){
+    public Result<IPage<UserCommentVo>> queryByPage(long articleId,int page,int count){
 
-        Page<Comment> commentPage = commentService.getBaseMapper()
-                .selectPage(new Page<>(page, count),
-                        Wrappers.<Comment>lambdaQuery()
-                                .eq(Comment::getArticleId,articleId)
-                                .orderByDesc(Comment::getUpdateTime));
+        IPage<UserCommentVo> userCommentVoPage = commentService.queryUserComment(page, count, articleId);
 
-        return commentPage != null ? Result.okData(commentPage) : Result.fail("获取评论失败！", null);
+//        Page<Comment> commentPage = commentService.getBaseMapper()
+//                .selectPage(new Page<>(page, count),
+//                        Wrappers.<Comment>lambdaQuery()
+//                                .eq(Comment::getArticleId,articleId)
+//                                .orderByDesc(Comment::getUpdateTime));
+
+        return userCommentVoPage != null ? Result.okData(userCommentVoPage) : Result.fail("获取评论失败！", null);
     }
 
 
