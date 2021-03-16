@@ -1,6 +1,9 @@
 package com.free.badmood.blackhole;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.entity.UserCommentVo;
+import com.free.badmood.blackhole.web.service.ICommentService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.runner.RunWith;
@@ -15,11 +18,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class Test {
 
     @Autowired
-    private IUserService userService;
+    private ICommentService commentService;
 
     @org.junit.Test
     public void test(){
-        User userInfo = userService.queryUserByUnionId("oSqjy6IiBa2TwpqagC1dk2HdZk2Q");
-        log.info(userInfo.toString());
+
+        IPage<UserCommentVo> userCommentVoIPage = commentService.queryUserComment(1, 10, 90);
+        log.error("===================");
+        log.error(userCommentVoIPage.toString());
     }
 }
