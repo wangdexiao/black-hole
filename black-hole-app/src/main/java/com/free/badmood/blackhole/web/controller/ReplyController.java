@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
-import com.free.badmood.blackhole.constant.ReplayType;
+import com.free.badmood.blackhole.constant.ReplyType;
 import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
@@ -58,17 +58,17 @@ public class ReplyController extends BaseController {
         long userId = userInfo.getId();
         reply.setFromUserId(userId);
 
-        if(ReplayType.REPLAY_COMMENT.ordinal() == reply.getReplayType()){
-            Comment comment = commentService.getById(reply.getReplayId());
+        if(ReplyType.REPLY_COMMENT.ordinal() == reply.getReplyType()){
+            Comment comment = commentService.getById(reply.getReplyId());
             long toUserId = comment.getFromUserId();
             reply.setToUserId(toUserId);
             reply.setCommentId(comment.getId());
         }else {
             //根据什么查询出要回复的这条回复的内容，根据什么字段根据目标id replyId
-            Reply replyReplay = replyService.getById(reply.getReplayId());
-            long commentId = replyReplay.getCommentId();
+            Reply replyReply = replyService.getById(reply.getReplyId());
+            long commentId = replyReply.getCommentId();
             reply.setCommentId(commentId);
-            reply.setToUserId(replyReplay.getFromUserId());
+            reply.setToUserId(replyReply.getFromUserId());
         }
         boolean savedFlag = replyService.save(reply);
 

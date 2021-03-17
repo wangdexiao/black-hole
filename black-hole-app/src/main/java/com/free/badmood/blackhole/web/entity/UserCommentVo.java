@@ -15,4 +15,6 @@ public class UserCommentVo extends Comment{
 
     private String avatarUrl;
 
+    private int replyCount;
+
 }
