@@ -95,7 +95,7 @@ public class SupportController extends BaseController {
 
             //已经点过赞
             if(dbSupport != null && dbSupport.getStatus() != 0){
-                //取消点赞
+                //=》取消点赞
                 result = supportService.update(
                         new Support(),//这样写会更新updatetime
                         Wrappers.<Support>lambdaUpdate()
@@ -106,7 +106,7 @@ public class SupportController extends BaseController {
                 return result ? Result.ok("已经点过赞，已经取消点赞","cancel") : Result.fail("已经点过赞，取消点赞失败");
 
 
-                  //已经点过赞，又取消了
+                  //已经点过赞，又取消了 =》 点赞
             }else if (dbSupport != null && dbSupport.getStatus() == 0){
                 result = supportService.update(
                                 new Support(),//这样写会更新updatetime
@@ -114,7 +114,7 @@ public class SupportController extends BaseController {
                                         .eq(Support::getId,dbSupport.getId())
                                         .set(Support::getStatus, 1));
                 return result ? Result.okData("ok") :Result.fail("点赞失败");
-            }else {//没有点过赞（数据库就没数据）
+            }else {//没有点过赞（数据库就没数据）=》点赞
                 result = supportService.save(support);
                 return result ? Result.okData("ok") :Result.fail("点赞失败");
             }
@@ -126,25 +126,14 @@ public class SupportController extends BaseController {
 
     }
 
+
     /**
-     * 添加点赞
+     * 添加到我赞的列表中
      */
-    @PostMapping("/cancel")
-    @RequireAuthentication
-    public Result<Boolean> cancelSupport(Support support){
+    private boolean addLikeList(){
 
-        long typeId = support.getTypeId();//文黯的id或者评论的id
-        int type = support.getType();
-        //获取用户的id
-        User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
-        long userId = user.getId();
-        boolean deltedFlag =
-                supportService.remove(Wrappers.<Support>lambdaQuery()
-                                        .eq(Support::getType,type)
-                                        .eq(Support::getTypeId,typeId)
-                                        .eq(Support::getUserId,userId));
+        return false;
 
-        return Result.okData(deltedFlag);
     }
 
 
