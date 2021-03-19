@@ -29,9 +29,6 @@ public class Collect extends BaseEntity {
      */
     private Integer articleId;
 
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
 
 }

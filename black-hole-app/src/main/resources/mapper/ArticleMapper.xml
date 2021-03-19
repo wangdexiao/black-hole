@@ -2,4 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.free.badmood.blackhole.web.mapper.ArticleMapper">
 
+    <resultMap id="User" type="com.free.badmood.blackhole.web.entity.User">
+        <id property="id" column="id" javaType="long"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="avatarUrl" column="avatar_url"/>
+    </resultMap>
+
+    <resultMap id="articlRes" type="com.free.badmood.blackhole.web.entity.ArticleRes">
+        <id property="id" column="id" javaType="long"/>
+        <result property="url" column="url"/>
+
+    </resultMap>
+
+    <resultMap id="aritcleVo" type="com.free.badmood.blackhole.web.entity.ArticleVo">
+        <id property="id" column="id" javaType="long"/>
+        <result property="userId" column="user_id" javaType="long"/>
+        <result property="readCount" column="read_count" javaType="int"/>
+        <result property="content" column="content" javaType="string"/>
+        <result property="addressName" column="address_name" javaType="string"/>
+        <result property="addressDetail" column="address_detail" javaType="string"/>
+        <result property="latitude" column="latitude" javaType="string"/>
+        <result property="longitude" column="longitude" javaType="string"/>
+        <result property="supportCount" column="support_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="del" column="del"/>
+        <association property="user" resultMap="User"/>
+
+        <collection property="resList" resultMap="articlRes" ofType="com.free.badmood.blackhole.web.entity.ArticleRes" />
+    </resultMap>
+
+
+    <select id="queryIndexArticle" resultMap="aritcleVo">
+
+        select a.*,r.url,u.nick_name,u.avatar_url
+			from t_f_article a
+            left join
+                t_f_article_res  r
+            on
+                a.id = r.article_id
+            left join
+                t_f_user u
+            on
+                u.id = a.user_id
+
+    </select>
+    <select id="querySupportCount" resultType="java.lang.Long">
+
+    </select>
 </mapper>

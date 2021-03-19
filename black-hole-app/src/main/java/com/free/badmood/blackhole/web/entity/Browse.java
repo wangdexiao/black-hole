@@ -29,9 +29,7 @@ public class Browse extends BaseEntity {
      */
     private Long ariticleId;
 
-    private LocalDateTime createTime;
 
-    private LocalDateTime updateTime;
 
 
 }

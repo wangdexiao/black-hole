@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
 import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.ArticleRes;
+import com.free.badmood.blackhole.web.entity.ArticleVo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.IArticleResService;
 import com.free.badmood.blackhole.web.service.IArticleService;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,57 +48,74 @@ public class ArticleController extends BaseController {
 
     private final IUserService userService;
 
-    public ArticleController(IArticleService articleService, IArticleResService articleResService, IUserService userService) {
+    private final RedisAritcleSupport redisAritcleSupport;
+
+    public ArticleController(IArticleService articleService, IArticleResService articleResService,
+                             IUserService userService,RedisAritcleSupport redisAritcleSupport) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
+        this.redisAritcleSupport = redisAritcleSupport;
     }
 
     /**
      * 添加文黯
-     * @param article 文黯实体
+     * @param articleVo 文黯实体
      * @return Article
      */
     @RequestMapping("/add")
     @RequireAuthentication
-    public Result<Article> addArticle(Article article){
+    public Result<Article> addArticle(ArticleVo articleVo){
         String openid = OpenIdContext.OPENID.get();
         User user = userService.queryUserByOpenId(openid); //微信openid
-        article.setUserId(user.getId());//用户id
-        article.setReadCount(0);//默认阅读数为0
-        article.setLatitude("0");//设置经纬度
-        article.setLongitude("0");//
+        articleVo.setUserId(user.getId());//用户id
+        articleVo.setReadCount(0);//默认阅读数为0
+        articleVo.setLatitude("0");//设置经纬度
+        articleVo.setLongitude("0");//
         //保存文黯记录
-        boolean saved = articleService.save(article);
+        boolean saved = articleService.save(articleVo);
 
 
         //组装资源记录
-        List<String> photoList = article.getPhotoArray();
-        final List<ArticleRes> articleResList = new ArrayList<>();
+        List<ArticleRes> photoList = articleVo.getResList();
+//        final List<ArticleRes> articleResList = new ArrayList<>();
         if(saved){
-            long articleId = article.getId();
-            photoList.forEach(url -> {
-                ArticleRes articleRes = new ArticleRes();
+            long articleId = articleVo.getId();
+            photoList.forEach(item -> {
+                String url = item.getUrl();
                 int startIndex = url.lastIndexOf("/") == -1 ? 0 : url.lastIndexOf("/");
-                articleRes.setFilepath(resPhotDir + url.substring(startIndex));
-                articleRes.setUrl(projectUrl + url);
-                articleRes.setArticleId(articleId);
-                articleResList.add(articleRes);
+                item.setFilepath(resPhotDir + url.substring(startIndex));
+                item.setUrl(projectUrl + url);
+                item.setArticleId(articleId);
             });
 
             // 保存文黯资源记录
-            boolean savedRes = articleResService.saveBatch(articleResList);
+            boolean savedRes = articleResService.saveBatch(photoList);
             if(savedRes){
-                return Result.okData(article);
+                return Result.okData(articleVo);
             }else {
-                articleService.removeById(article.getId());
-                return Result.fail("发布文黯失败,保存资源文黯失败！",article);
+                articleService.removeById(articleVo.getId());
+                return Result.fail("发布文黯失败,保存资源文黯失败！",articleVo);
             }
         }else {
-            return Result.fail("发布文黯失败,保存文黯记录失败",article);
+            return Result.fail("发布文黯失败,保存文黯记录失败",articleVo);
         }
 
     }
+
+
+//    /**
+//     * 获取文黯
+//     * @param page 页码数
+//     * @param count 每页数量
+//     * @return Page<Article>
+//     */
+//    @RequestMapping("/get2")
+//    public Result<Page<Article>> getArticleByPage(int count, int page){
+//        Page<Article> aritcleByPage = articleService.getAritcleByPage(count,page);
+//        return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
+//    }
+
 
 
     /**
@@ -107,8 +125,18 @@ public class ArticleController extends BaseController {
      * @return Page<Article>
      */
     @RequestMapping("/get")
-    public Result<Page<Article>> getArticleByPage(int count, int page){
-        Page<Article> aritcleByPage = articleService.getAritcleByPage(count,page);
+    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page){
+        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page);
+        List<ArticleVo> records = aritcleByPage.getRecords();
+        records.forEach(it -> {
+            long aritcleId = it.getId();
+            long userId = it.getUserId();
+            long supportCount = redisAritcleSupport.sizeArticleSupport(aritcleId);
+            boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId,aritcleId);
+            it.setSupportCount(supportCount);
+            it.setCurrentUserSupport(currentUserSupport);
+            it.setCommentCount(10);
+        });
         return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
     }
 

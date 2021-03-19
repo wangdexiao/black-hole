@@ -1,7 +1,10 @@
 package com.free.badmood.blackhole.web.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.free.badmood.blackhole.web.entity.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -14,5 +17,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ArticleMapper extends BaseMapper<Article> {
+
+
+    Page<ArticleVo> queryIndexArticle(Page page);
+
+
+    long querySupportCount();
 
 }
