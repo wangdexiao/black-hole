@@ -9,7 +9,8 @@
     </resultMap>
 
     <resultMap id="articlRes" type="com.free.badmood.blackhole.web.entity.ArticleRes">
-        <id property="id" column="id" javaType="long"/>
+<!--        <id property="id" column="id" javaType="long"/>-->
+        <result property="articleId" column="article_id" javaType="long"/>
         <result property="url" column="url"/>
 
     </resultMap>
@@ -29,26 +30,42 @@
         <result property="del" column="del"/>
         <association property="user" resultMap="User"/>
 
-        <collection property="resList" resultMap="articlRes" ofType="com.free.badmood.blackhole.web.entity.ArticleRes" />
+<!--        有select column 添加resultMap="articlRes" 报错，不让在嵌套了-->
+        <collection property="resList" column="id" select="getResUrls"   ofType="com.free.badmood.blackhole.web.entity.ArticleRes" >
+            <result property="articleId" column="article_id" javaType="long"/>
+            <result property="url" column="url"/>
+        </collection>
     </resultMap>
 
+    <select id="getResUrls" parameterType="string" resultType="com.free.badmood.blackhole.web.entity.ArticleRes">
+
+
+        select r.id,r.url
+            from
+                t_f_article_res r
+            where
+                r.article_id = #{articleId}
+    </select>
 
     <select id="queryIndexArticle" resultMap="aritcleVo">
 
-        select a.*,r.url,u.nick_name,u.avatar_url
-			from t_f_article a
-            left join
-                t_f_article_res  r
-            on
-                a.id = r.article_id
+        select a.*,u.nick_name,u.avatar_url
+			from
+			    t_f_article a
             left join
                 t_f_user u
             on
                 u.id = a.user_id
+
             order by update_time desc
 
     </select>
-    <select id="querySupportCount" resultType="java.lang.Long">
 
-    </select>
+
+
+
+
+
+
+
 </mapper>

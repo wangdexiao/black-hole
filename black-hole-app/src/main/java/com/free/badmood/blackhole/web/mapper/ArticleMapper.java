@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.free.badmood.blackhole.web.entity.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,7 +24,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     Page<ArticleVo> queryIndexArticle(Page page);
 
+    /**
+     *
+     * @param articleId 文黯id
+     */
 
-    long querySupportCount();
+    List<ArticleRes> getResUrls(long articleId);
+//    long querySupportCount();
 
 }
