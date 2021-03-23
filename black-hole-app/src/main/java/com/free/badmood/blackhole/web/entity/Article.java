@@ -60,6 +60,17 @@ public class Article extends BaseEntity {
     private String longitude;
 
 
+    /**
+     * 公开范围（0代表仅自己可看，1代表公开）
+     */
+    private int scope;
+
+    /**
+     * 文黯类型(0文黯，1视频)
+     */
+    private int type;
+
+
 //    //文章相关联的资源url地址 （vo数据，前端展示）
 //    @TableField(exist = false)
 //    private List<String> resList;

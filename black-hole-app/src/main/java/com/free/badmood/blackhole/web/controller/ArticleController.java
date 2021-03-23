@@ -122,11 +122,13 @@ public class ArticleController extends BaseController {
      * 获取文黯
      * @param page 页码数
      * @param count 每页数量
+     * @param  type //1-代表视频 0-代表普通文黯
+     * @param  scope //1-公开 0-仅自己可见
      * @return Page<Article>
      */
     @RequestMapping("/get")
-    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page){
-        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page);
+    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page,int type,int scope){
+        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page,type,scope);
         List<ArticleVo> records = aritcleByPage.getRecords();
         records.forEach(it -> {
             long aritcleId = it.getId();

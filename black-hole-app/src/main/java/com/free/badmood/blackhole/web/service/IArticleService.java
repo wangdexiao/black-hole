@@ -22,7 +22,7 @@ public interface IArticleService extends IService<Article> {
 //    }
 
 
-    Page<ArticleVo> queryIndexArticle(int count,int page);
+    Page<ArticleVo> queryIndexArticle(int count,int page,int type,int scope);
 
 
 

@@ -56,7 +56,11 @@
                 t_f_user u
             on
                 u.id = a.user_id
-
+            where
+                type  = #{type}
+                <if test="scope == 1">
+                    and scope = #{scope}
+                </if>
             order by update_time desc
 
     </select>

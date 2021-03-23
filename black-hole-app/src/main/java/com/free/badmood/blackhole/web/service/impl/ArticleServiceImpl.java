@@ -65,8 +65,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //    }
 
     @Override
-    public Page<ArticleVo> queryIndexArticle(int size, int current) {
+    public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope) {
 
-         return articleMapper.queryIndexArticle(new Page(current, size));
+         return articleMapper.queryIndexArticle(new Page(current, size),type,scope);
     }
 }

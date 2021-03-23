@@ -35,7 +35,7 @@ public class Test {
 //        log.error(userCommentVoIPage.toString());
 
 
-        Page<ArticleVo> articleVoPage = articleService.queryIndexArticle(10, 1);
+        Page<ArticleVo> articleVoPage = articleService.queryIndexArticle(10, 1,0,1);
         log.error(articleVoPage.toString());
     }
 }

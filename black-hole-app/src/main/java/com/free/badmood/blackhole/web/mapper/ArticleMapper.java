@@ -22,7 +22,7 @@ import java.util.List;
 public interface ArticleMapper extends BaseMapper<Article> {
 
 
-    Page<ArticleVo> queryIndexArticle(Page page);
+    Page<ArticleVo> queryIndexArticle(Page page,int type,int scope);
 
     /**
      *
@@ -33,3 +33,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
 //    long querySupportCount();
 
 }
+
+
+
