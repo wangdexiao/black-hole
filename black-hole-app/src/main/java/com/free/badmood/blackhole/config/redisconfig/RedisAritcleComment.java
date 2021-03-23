@@ -24,7 +24,7 @@ public class RedisAritcleComment {
 
 
     /**
-     * 给文黯点赞
+     * 给文黯添加评论
      * @param articleId 文黯id
      * @param comment 用户的评论
      */

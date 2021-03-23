@@ -33,9 +33,15 @@ public class ArticleVo extends Article{
     private long commentCount;
 
     /**
-     * 当前当前用户是否已经点赞了该用户
+     * 当前当前用户是否已经点赞了该文黯
      */
     private boolean currentUserSupport;
+
+
+    /**
+     * 当前当前用户是否已经收藏了该文黯
+     */
+    private boolean currentUserCollect;
 
 
 }

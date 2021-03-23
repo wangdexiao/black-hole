@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCollect;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
 import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.web.entity.Article;
@@ -50,12 +51,16 @@ public class ArticleController extends BaseController {
 
     private final RedisAritcleSupport redisAritcleSupport;
 
+    private final RedisAritcleCollect redisAritcleCollect;
+
     public ArticleController(IArticleService articleService, IArticleResService articleResService,
-                             IUserService userService,RedisAritcleSupport redisAritcleSupport) {
+                             IUserService userService,RedisAritcleSupport redisAritcleSupport,
+                             RedisAritcleCollect redisAritcleCollect) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
         this.redisAritcleSupport = redisAritcleSupport;
+        this.redisAritcleCollect = redisAritcleCollect;
     }
 
     /**
@@ -133,10 +138,17 @@ public class ArticleController extends BaseController {
         records.forEach(it -> {
             long aritcleId = it.getId();
             long userId = it.getUserId();
+
             long supportCount = redisAritcleSupport.sizeArticleSupport(aritcleId);
-            boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId,aritcleId);
             it.setSupportCount(supportCount);
+
+            boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId,aritcleId);
+            //当前用户是否点赞了
             it.setCurrentUserSupport(currentUserSupport);
+
+            boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId,aritcleId);
+            it.setCurrentUserCollect(currentUserCollect);
+
             it.setCommentCount(10);
         });
         return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
