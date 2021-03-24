@@ -2,6 +2,7 @@ package com.free.badmood.blackhole.web.controller;
 
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.redisconfig.RedisUserFans;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
 import com.free.badmood.blackhole.context.OpenIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
@@ -26,6 +27,10 @@ public class FocusUserController {
     @Autowired
     private UserInfoContext userInfoContext;
 
+
+    @Autowired
+    private RedisUserFans redisUserFans;
+
     /**
      * 关注用户或取消关注用户
      * @param focusUserId 被关注的用户id
@@ -36,9 +41,11 @@ public class FocusUserController {
     public Result<String> addFocusUser(long focusUserId){
         User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
         if(redisUserFocus.existUserFocus(userInfo.getId(),focusUserId)){
+            redisUserFans.addUserFans(focusUserId,userInfo.getId());
             redisUserFocus.canleUserFocus(userInfo.getId(),focusUserId);
             return Result.okData("cancel");
         }else {
+            redisUserFans.addUserFans(focusUserId,userInfo.getId());
             redisUserFocus.addUserFocus(userInfo.getId(), focusUserId);
             return Result.okData("ok");
         }
