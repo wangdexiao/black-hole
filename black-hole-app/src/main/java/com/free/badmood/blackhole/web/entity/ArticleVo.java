@@ -44,4 +44,10 @@ public class ArticleVo extends Article{
     private boolean currentUserCollect;
 
 
+    /**
+     * 是否已经关注了该用户
+     */
+    private boolean hasFocusUser;
+
+
 }

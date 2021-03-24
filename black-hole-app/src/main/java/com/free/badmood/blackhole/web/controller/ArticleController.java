@@ -7,7 +7,9 @@ import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCollect;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
+import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
 import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.free.badmood.blackhole.web.entity.ArticleVo;
@@ -17,6 +19,7 @@ import com.free.badmood.blackhole.web.service.IArticleService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -53,14 +56,21 @@ public class ArticleController extends BaseController {
 
     private final RedisAritcleCollect redisAritcleCollect;
 
+    private final RedisUserFocus redisUserFocus;
+
+    private UserInfoContext userInfoContext;
+
     public ArticleController(IArticleService articleService, IArticleResService articleResService,
                              IUserService userService,RedisAritcleSupport redisAritcleSupport,
-                             RedisAritcleCollect redisAritcleCollect) {
+                             RedisAritcleCollect redisAritcleCollect,
+                             RedisUserFocus redisUserFocus,UserInfoContext userInfoContext) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
         this.redisAritcleSupport = redisAritcleSupport;
         this.redisAritcleCollect = redisAritcleCollect;
+        this.redisUserFocus = redisUserFocus;
+        this.userInfoContext = userInfoContext;
     }
 
     /**
@@ -135,6 +145,8 @@ public class ArticleController extends BaseController {
     public Result<Page<ArticleVo>> queryArticleByPage(int count, int page,int type,int scope){
         Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page,type,scope);
         List<ArticleVo> records = aritcleByPage.getRecords();
+
+
         records.forEach(it -> {
             long aritcleId = it.getId();
             long userId = it.getUserId();
@@ -148,6 +160,12 @@ public class ArticleController extends BaseController {
 
             boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId,aritcleId);
             it.setCurrentUserCollect(currentUserCollect);
+
+            if(StringUtils.hasLength(OpenIdContext.OPENID.get())){
+                User currentUser = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+                long currentUserId =  currentUser.getId();
+                it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
+            }
 
             it.setCommentCount(10);
         });
