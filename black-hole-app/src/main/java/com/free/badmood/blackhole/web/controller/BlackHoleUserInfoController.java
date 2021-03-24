@@ -48,11 +48,13 @@ public class BlackHoleUserInfoController {
         blackHoleUserVo.setFansCount(fansCount);
 
         int articleCount = articleService.count(Wrappers.<Article>lambdaQuery()
-                .eq(Article::getType, 0));
+                .eq(Article::getType, 0)
+                .eq(Article::getUserId,userId));
         blackHoleUserVo.setArticleCount(articleCount);
 
         int videoCount = articleService.count(Wrappers.<Article>lambdaQuery()
-                .eq(Article::getType, 1));
+                .eq(Article::getType, 1)
+                .eq(Article::getUserId,userId));
         blackHoleUserVo.setVideoCount(videoCount);
 
         return Result.okData(blackHoleUserVo);
