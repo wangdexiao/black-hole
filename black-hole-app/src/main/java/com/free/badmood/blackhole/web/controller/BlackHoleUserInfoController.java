@@ -55,6 +55,7 @@ public class BlackHoleUserInfoController {
         int videoCount = articleService.count(Wrappers.<Article>lambdaQuery()
                 .eq(Article::getType, 1)
                 .eq(Article::getUserId,userId));
+
         blackHoleUserVo.setVideoCount(videoCount);
 
         return Result.okData(blackHoleUserVo);
