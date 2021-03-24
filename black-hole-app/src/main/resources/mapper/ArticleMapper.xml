@@ -24,6 +24,8 @@
         <result property="addressDetail" column="address_detail" javaType="string"/>
         <result property="latitude" column="latitude" javaType="string"/>
         <result property="longitude" column="longitude" javaType="string"/>
+        <result property="scope" column="scope" javaType="java.lang.Integer"/>
+        <result property="type" column="type" javaType="java.lang.Integer"/>
         <result property="supportCount" column="support_count"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
@@ -57,9 +59,17 @@
             on
                 u.id = a.user_id
             where
-                type  = #{type}
-                <if test="scope == 1">
-                    and scope = #{scope}
+                1=1
+                <if test="type != 2">
+                    and type  = #{type}
+                </if>
+
+                <if test="scope == 2">
+                    and a.user_id = #{userId}
+                </if>
+
+                <if test="scope != 2">
+                    and scope = 1
                 </if>
             order by update_time desc
 

@@ -83,7 +83,6 @@ public class CertificationController {
                     User user = new User();
                     user.setOpenId(wxCreditInfoEntity.getOpenid());
                     user.setSessionKey(wxCreditInfoEntity.getSessionKey());
-                    //todo 上线时释放开
                     wxCreditInfoEntity.setSessionKey(null);
                     OpenIdContext.OPENID.set(wxCreditInfoEntity.getOpenid());
                     log.error("最新获得的sessionkey为：" + wxCreditInfoEntity.getSessionKey());

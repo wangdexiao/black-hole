@@ -31,6 +31,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        //需不需要认证的接口都读取设置下openid
+        String openid = ((HttpServletRequest) request).getHeader("openid");
+        OpenIdContext.OPENID.set(openid);
+
         boolean needAuthentication;
         if (handler != null) {
             if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {

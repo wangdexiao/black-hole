@@ -2,6 +2,8 @@ package com.free.badmood.blackhole.web.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.free.badmood.blackhole.web.entity.ArticleVo;
@@ -39,6 +41,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private UserMapper userMapper;
 
 
+    @Autowired
+    private UserInfoContext userInfoContext;
+
+
 //    public Page<Article> getAritcleByPage(int count, int page){
 //        Page<Article> tfArticlePage = articleMapper.selectPage(new Page<>(page, count), Wrappers.<Article>lambdaQuery().orderByDesc(Article::getUpdateTime));
 //        //todo 临时这么写
@@ -66,7 +72,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope) {
+        long userId = -1;
+        if(scope == 2){
+            User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+            userId = user.getId();
 
-         return articleMapper.queryIndexArticle(new Page(current, size),type,scope);
+        }
+         return articleMapper.queryIndexArticle(new Page(current, size),type,scope,userId);
     }
 }

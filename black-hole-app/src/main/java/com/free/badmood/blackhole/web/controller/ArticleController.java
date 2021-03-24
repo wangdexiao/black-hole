@@ -143,6 +143,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping("/get")
     public Result<Page<ArticleVo>> queryArticleByPage(int count, int page,int type,int scope){
+
         Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page,type,scope);
         List<ArticleVo> records = aritcleByPage.getRecords();
 
