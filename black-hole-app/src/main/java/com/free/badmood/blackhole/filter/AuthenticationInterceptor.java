@@ -74,12 +74,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private boolean hasAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String token = ((HttpServletRequest) request).getHeader("token");
+
         // 是否存在该用户，该用户已经注册过了
         if(StringUtils.hasLength(token)){
             String unionId = JWT.decode(token).getAudience().get(0);
-
+            UnionIdContext.UNIONID.set(unionId);
             if(userInfoContext.existUserInfo(unionId)){
-                UnionIdContext.UNIONID.set(unionId);
+//                UnionIdContext.UNIONID.set(unionId);
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
                 try {
