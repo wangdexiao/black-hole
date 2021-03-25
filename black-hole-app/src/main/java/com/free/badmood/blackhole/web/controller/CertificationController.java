@@ -15,7 +15,6 @@ import com.free.badmood.blackhole.web.entity.WxCreditInfoEntity;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.web.service.ITokenService;
 import com.free.badmood.blackhole.web.service.IUserService;
-import com.sun.xml.internal.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
