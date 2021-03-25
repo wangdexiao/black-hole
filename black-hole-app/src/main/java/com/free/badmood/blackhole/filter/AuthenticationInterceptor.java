@@ -1,12 +1,17 @@
 package com.free.badmood.blackhole.filter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.context.UserInfoContext;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +39,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         //需不需要认证的接口都读取设置下openid
         String openid = ((HttpServletRequest) request).getHeader("openid");
-        OpenIdContext.OPENID.set(openid);
+        UnionIdContext.UNIONID.set(openid);
 
         boolean needAuthentication;
         if (handler != null) {
@@ -68,20 +73,42 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      */
     private boolean hasAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String openid = ((HttpServletRequest) request).getHeader("openid");
-        if(userInfoContext.existUserInfo(openid)){
-            OpenIdContext.OPENID.set(openid);
+        String token = ((HttpServletRequest) request).getHeader("token");
+        // 是否存在该用户，该用户已经注册过了
+        if(StringUtils.hasLength(token)){
+            String unionId = JWT.decode(token).getAudience().get(0);
+
+            if(userInfoContext.existUserInfo(unionId)){
+                UnionIdContext.UNIONID.set(unionId);
+                // 验证 token
+                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
+                try {
+                    jwtVerifier.verify(token);
+                } catch (JWTVerificationException e) {
+                    e.printStackTrace();
+                    return401(response);
+                    return false;
+                }
+            }else {
+                return401(response);
+                return false;
+            }
             return true;
+
         }else {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setContentType("application/json; charset=UTF-8");
-            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            PrintWriter writer = httpResponse.getWriter();
-            writer.println(Result.unAuth2code(null).toString());
-            writer.flush();
-            writer.close();
+            return401(response);
             return false;
         }
+    }
+
+    public void return401(HttpServletResponse response) throws IOException {
+//        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        response.setContentType("application/json; charset=UTF-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        PrintWriter writer = response.getWriter();
+        writer.println(Result.unAuth2code(null).toString());
+        writer.flush();
+        writer.close();
     }
 
     /**

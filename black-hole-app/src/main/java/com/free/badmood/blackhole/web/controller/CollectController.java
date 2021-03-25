@@ -5,7 +5,7 @@ import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCollect;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class CollectController extends BaseController {
     @PostMapping("/add")
     @RequireAuthentication
     public Result<String> collectArticle(long articleId){
-        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         if(redisAritcleCollect.existCollectArticle(userInfo.getId(),articleId)){
             redisAritcleCollect.canleCollectArticle(userInfo.getId(),articleId);
             return Result.okData("cancel");
@@ -49,7 +49,7 @@ public class CollectController extends BaseController {
 //    @PostMapping("/cancel")
 //    @RequireAuthentication
 //    public Result<Boolean> cancelCollectArticle(long articleId){
-//        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+//        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
 //        redisAritcleCollect.canleCollectArticle(userInfo.getId(),articleId);
 //        return Result.okData(true);
 //    }

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.constant.ReplyType;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
 import com.free.badmood.blackhole.web.entity.Reply;
@@ -54,7 +54,7 @@ public class ReplyController extends BaseController {
     @PostMapping("/add")
     @RequireAuthentication
     public Result<Boolean> addReply(Reply reply){
-        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         long userId = userInfo.getId();
         reply.setFromUserId(userId);
 

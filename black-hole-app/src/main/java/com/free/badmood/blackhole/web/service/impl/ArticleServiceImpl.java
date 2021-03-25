@@ -1,11 +1,9 @@
 package com.free.badmood.blackhole.web.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
-import com.free.badmood.blackhole.web.entity.ArticleRes;
 import com.free.badmood.blackhole.web.entity.ArticleVo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.mapper.ArticleMapper;
@@ -15,9 +13,6 @@ import com.free.badmood.blackhole.web.service.IArticleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -74,7 +69,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope) {
         long userId = -1;
         if(scope == 2){
-            User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+            User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
             userId = user.getId();
 
         }

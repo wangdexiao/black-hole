@@ -17,7 +17,7 @@ public class LoginStateFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 //        String openid = ((HttpServletRequest) request).getHeader("openid");
 //        if(loginStateContext.existUserInfo(openid)){
-//            OpenIdContext.OPENID.set(openid);
+//            UnionIdContext.UNIONID.set(openid);
 //            chain.doFilter(request,response);
 //        }else {
 //            HttpServletResponse httpResponse = (HttpServletResponse) response;

@@ -15,32 +15,37 @@ public class UserInfoContext {
     @Autowired
     private IUserService userService;
 
+    //key 為unionID
     private ConcurrentHashMap<String, User> userInfoMap = new ConcurrentHashMap<>();
 
     public boolean addUserInfo(User user){
-        removeUserInfo(user.getOpenId());
-        userInfoMap.put(user.getOpenId(), user);
+        if (StringUtils.hasLength(user.getUnionid())) {
+            removeUserInfo(user.getUnionid());
+            userInfoMap.put(user.getUnionid(), user);
+        }
         return true;
     }
 
-    public boolean removeUserInfo(String openId){
-        userInfoMap.remove(openId);
+    public boolean removeUserInfo(String unionId){
+        userInfoMap.remove(unionId);
         return true;
     }
 
-    public boolean existUserInfo(String openId){
-        if(StringUtils.hasLength(openId)){
 
-            User user = userInfoMap.get(openId);
+
+    public boolean existUserInfo(String unionId){
+        if(StringUtils.hasLength(unionId)){
+
+            User user = userInfoMap.get(unionId);
             if(user == null ){
-                user = userService.queryUserByOpenId(openId);
+                user = userService.queryUserByUnionId(unionId);
                 if(user != null){
                     addUserInfo(user);
                     return true;
                 }
             }else {
                 if(user.getId() <=0){
-                    user = userService.queryUserByOpenId(openId);
+                    user = userService.queryUserByUnionId(unionId);
                     if(user != null){
                         addUserInfo(user);
                     }
@@ -52,16 +57,16 @@ public class UserInfoContext {
     }
 
     /**
-     * getUserInfoByOpenId
-     * @param openId
+     * getUserInfoByUnionId
+     * @param unionId
      * @return
      */
-    public User getUserInfoByOpenId(String openId){
+    public User getUserInfoByUnionId(String unionId){
         User user;
-        if(StringUtils.hasLength(openId)){
-            user = userInfoMap.get(openId);
+        if(StringUtils.hasLength(unionId)){
+            user = userInfoMap.get(unionId);
             if (user == null){
-                user = userService.queryUserByOpenId(openId);
+                user = userService.queryUserByUnionId(unionId);
                 addUserInfo(user);
             }
         }else {
@@ -70,4 +75,24 @@ public class UserInfoContext {
         return user;
     }
 
+
+
+
+
+    //key為openid
+    private ConcurrentHashMap<String, User> openIdUserInfoMap = new ConcurrentHashMap<>();
+
+    public boolean addUserInfoByOpenId(User user){
+        if (StringUtils.hasLength(user.getOpenId())) {
+            removeUserInfoByOpenId(user.getOpenId());
+            openIdUserInfoMap.put(user.getUnionid(), user);
+        }
+        return true;
+    }
+
+
+    public boolean removeUserInfoByOpenId(String openId){
+        openIdUserInfoMap.remove(openId);
+        return true;
+    }
 }

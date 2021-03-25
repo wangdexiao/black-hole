@@ -4,7 +4,7 @@ import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFans;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class FocusUserController {
     @PostMapping("/add")
     @RequireAuthentication
     public Result<String> addFocusUser(long focusUserId){
-        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         if(redisUserFocus.existUserFocus(userInfo.getId(),focusUserId)){
             redisUserFans.addUserFans(focusUserId,userInfo.getId());
             redisUserFocus.canleUserFocus(userInfo.getId(),focusUserId);

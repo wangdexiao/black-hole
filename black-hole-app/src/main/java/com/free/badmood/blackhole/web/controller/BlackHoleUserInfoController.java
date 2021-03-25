@@ -5,7 +5,7 @@ import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFans;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.BlackHoleUserVo;
@@ -38,7 +38,7 @@ public class BlackHoleUserInfoController {
     @RequireAuthentication
     public Result<BlackHoleUserVo> getUser(){
         BlackHoleUserVo blackHoleUserVo = new BlackHoleUserVo();
-        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         long userId = userInfo.getId();
         // 关注数量
         long focusCount = redisUserFocus.sizeUserFocus(userId);

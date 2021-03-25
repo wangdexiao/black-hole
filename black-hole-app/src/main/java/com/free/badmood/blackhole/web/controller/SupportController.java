@@ -7,7 +7,7 @@ import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
 import com.free.badmood.blackhole.constant.SupportType;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Like;
 import com.free.badmood.blackhole.web.entity.Support;
@@ -110,7 +110,7 @@ public class SupportController extends BaseController {
         //如果存在改文黯或者评论
         if(existFlag){
             //获取用户的id
-            User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+            User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
             long userId = user.getId();
             //设置用户id
             support.setUserId(userId);
@@ -164,7 +164,7 @@ public class SupportController extends BaseController {
         //如果存在改文黯或者评论
         if(existFlag){
             //获取用户的id
-            User user = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+            User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
             //设置用户id
             support.setUserId(user.getId());
 

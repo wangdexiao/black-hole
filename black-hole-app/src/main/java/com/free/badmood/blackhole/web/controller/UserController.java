@@ -7,9 +7,11 @@ import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.base.utils.wxdecode.WXCore;
 import com.free.badmood.blackhole.constant.CommonConstant;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
+import com.free.badmood.blackhole.web.entity.TokenInfo;
 import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.service.ITokenService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -37,10 +39,15 @@ public class UserController extends BaseController {
 
     private final IUserService tfUserService;
 
-    public UserController(Environment environment, UserInfoContext userInfoContext, IUserService tfUserService) {
+    private final ITokenService tokenService;
+
+
+    public UserController(Environment environment, UserInfoContext userInfoContext, IUserService tfUserService,
+                          ITokenService tokenService) {
         this.environment = environment;
         this.userInfoContext = userInfoContext;
         this.tfUserService = tfUserService;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -51,10 +58,15 @@ public class UserController extends BaseController {
      */
     @PostMapping(value = "/userinfo")
     @RequireAuthentication
-    public Result<User> decodeUserInfo(String iv, String rawData){
+    public Result<TokenInfo> decodeUserInfo(String iv, String rawData){
+        TokenInfo token = null;
         String wxAppId = environment.getProperty(CommonConstant.WX_APPID);
-        String openid = OpenIdContext.OPENID.get();
-        User falseUser = userInfoContext.getUserInfoByOpenId(openid);
+        String unionId = UnionIdContext.UNIONID.get();
+        User falseUser = userInfoContext.getUserInfoByUnionId(unionId);
+        log.info("sessionKey為：" + falseUser.getSessionKey());
+        log.info("wxAppId為：" + wxAppId);
+        log.info("rawData為：" + rawData);
+        log.info("iv為：" + iv);
         String decrypt = WXCore.decrypt(wxAppId, rawData, falseUser.getSessionKey(), iv);
         log.info("解密得到的用户信息为：" + decrypt);
         User userInfo = JSONObject.parseObject(decrypt, User.class);
@@ -67,9 +79,12 @@ public class UserController extends BaseController {
         }
         //添加或更新用户信息
         boolean saved = tfUserService.saveOrUpdate(userInfo);
+        userInfoContext.addUserInfo(userInfo);
+        if(saved){
+            token = tokenService.getToken(userInfo);
+        }
 
 
-
-        return saved ? Result.okData(userInfo) : Result.fail("解密，磁盘化过程失败！",userInfo);
+        return token !=null ? Result.okData(token) : Result.fail("获取token失败",null);
     }
 }

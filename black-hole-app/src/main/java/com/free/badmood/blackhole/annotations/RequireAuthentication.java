@@ -13,5 +13,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface RequireAuthentication {
 
-
+    boolean required() default true;
 }

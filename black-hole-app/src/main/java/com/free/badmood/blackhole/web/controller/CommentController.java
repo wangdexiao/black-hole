@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
 import com.free.badmood.blackhole.web.entity.User;
@@ -46,7 +46,7 @@ public class CommentController extends BaseController {
     @PostMapping("/add")
     @RequireAuthentication
     public Result<Boolean> addCommnet(Comment comment){
-        User userInfo = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+        User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         comment.setFromUserId(userInfo.getId());
         boolean savedFlag = commentService.save(comment);
 

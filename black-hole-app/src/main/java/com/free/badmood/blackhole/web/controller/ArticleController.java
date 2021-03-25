@@ -8,7 +8,7 @@ import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCollect;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
-import com.free.badmood.blackhole.context.OpenIdContext;
+import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
 import com.free.badmood.blackhole.web.entity.ArticleRes;
@@ -81,7 +81,7 @@ public class ArticleController extends BaseController {
     @RequestMapping("/add")
     @RequireAuthentication
     public Result<Article> addArticle(ArticleVo articleVo){
-        String openid = OpenIdContext.OPENID.get();
+        String openid = UnionIdContext.UNIONID.get();
         User user = userService.queryUserByOpenId(openid); //微信openid
         articleVo.setUserId(user.getId());//用户id
         articleVo.setReadCount(0);//默认阅读数为0
@@ -162,8 +162,8 @@ public class ArticleController extends BaseController {
             boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId,aritcleId);
             it.setCurrentUserCollect(currentUserCollect);
 
-            if(StringUtils.hasLength(OpenIdContext.OPENID.get())){
-                User currentUser = userInfoContext.getUserInfoByOpenId(OpenIdContext.OPENID.get());
+            if(StringUtils.hasLength(UnionIdContext.UNIONID.get())){
+                User currentUser = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
                 long currentUserId =  currentUser.getId();
                 it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
             }
