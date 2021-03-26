@@ -35,6 +35,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
     Page<ArticleVo> querySupportAndCollectArticles(Page page, long userId, Set<Object> articleIds);
 //    long querySupportCount();
 
+    Page<ArticleVo> queryCommentArticles(Page page, Set<Object> articleIds);
+
 }
 
 

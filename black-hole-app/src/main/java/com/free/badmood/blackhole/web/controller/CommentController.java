@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.redisconfig.RedisUserComment;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
@@ -32,9 +33,12 @@ public class CommentController extends BaseController {
 
     private final UserInfoContext userInfoContext;
 
-    public CommentController(ICommentService commentService, UserInfoContext userInfoContext) {
+    private final RedisUserComment redisUserComment;
+
+    public CommentController(ICommentService commentService, UserInfoContext userInfoContext,RedisUserComment redisUserComment) {
         this.commentService = commentService;
         this.userInfoContext = userInfoContext;
+        this.redisUserComment = redisUserComment;
     }
 
 
@@ -49,6 +53,9 @@ public class CommentController extends BaseController {
         User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         comment.setFromUserId(userInfo.getId());
         boolean savedFlag = commentService.save(comment);
+        if(savedFlag){
+            redisUserComment.addUserCommentArticleId(comment.getArticleId(),userInfo.getId());
+        }
 
         return savedFlag ? Result.okData(true) : Result.fail(-1, "添加评论失败！");
     }

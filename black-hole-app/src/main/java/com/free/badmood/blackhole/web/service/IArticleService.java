@@ -28,4 +28,7 @@ public interface IArticleService extends IService<Article> {
 
 
     Page<ArticleVo> querySupportAndCollectArticles(int size,int current,long userId, Set<Object> articleIds);
+
+
+    public Page<ArticleVo> queryCommentArticles(int size,int current, Set<Object> articleIds);
 }

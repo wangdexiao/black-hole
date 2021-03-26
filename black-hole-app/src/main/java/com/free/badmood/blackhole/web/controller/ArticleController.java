@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
-import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCollect;
-import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
-import com.free.badmood.blackhole.config.redisconfig.RedisUserFocus;
-import com.free.badmood.blackhole.config.redisconfig.RedisUserSupport;
+import com.free.badmood.blackhole.config.redisconfig.*;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Article;
@@ -20,6 +17,7 @@ import com.free.badmood.blackhole.web.service.IArticleService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,13 +61,16 @@ public class ArticleController extends BaseController {
 
     private final RedisUserFocus redisUserFocus;
 
-    private UserInfoContext userInfoContext;
+    private final UserInfoContext userInfoContext;
+
+    private final RedisUserComment redisUserComment;
 
     public ArticleController(IArticleService articleService, IArticleResService articleResService,
                              IUserService userService,RedisAritcleSupport redisAritcleSupport,
                              RedisAritcleCollect redisAritcleCollect,
                              RedisUserFocus redisUserFocus,UserInfoContext userInfoContext,
-                             RedisUserSupport redisUserSupport) {
+                             RedisUserSupport redisUserSupport,
+                             RedisUserComment redisUserComment) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
@@ -78,6 +79,7 @@ public class ArticleController extends BaseController {
         this.redisUserFocus = redisUserFocus;
         this.userInfoContext = userInfoContext;
         this.redisUserSupport = redisUserSupport;
+        this.redisUserComment = redisUserComment;
     }
 
     /**
@@ -196,6 +198,28 @@ public class ArticleController extends BaseController {
         Set<Object> articleIds = redisUserSupport.supportAndCollectArticleIds(userId);
 
         Page<ArticleVo> articleVoPage = articleService.querySupportAndCollectArticles(count, page, userId, articleIds);
+        return articleVoPage != null ? Result.okData(articleVoPage) : Result.fail("获取文黯失败！", null);
+    }
+
+    /**
+     * 查询我评论过的文黯
+     * @param count
+     * @param page
+     * @return
+     */
+    @PostMapping("/personal/comment/get")
+    @RequireAuthentication
+    public Result<Page<ArticleVo>> queryCommnetArticles(int count, int page){
+        //合并点过赞的文黯id 和 收藏的文黯id
+
+        User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
+        long userId = user.getId();
+        Set<Object> articleIds = redisUserComment.memberUserCommentArticleId(userId);
+        if(CollectionUtils.isEmpty(articleIds)){
+            return Result.okData(new Page<>(page, count, 0, true));
+        }
+
+        Page<ArticleVo> articleVoPage = articleService.queryCommentArticles(count, page, articleIds);
         return articleVoPage != null ? Result.okData(articleVoPage) : Result.fail("获取文黯失败！", null);
     }
 

@@ -82,4 +82,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public Page<ArticleVo> querySupportAndCollectArticles(int size,int current,long userId, Set<Object> articleIds) {
         return articleMapper.querySupportAndCollectArticles(new Page(current, size),userId,articleIds);
     }
+
+    @Override
+    public Page<ArticleVo> queryCommentArticles(int size,int current, Set<Object> articleIds) {
+        return articleMapper.queryCommentArticles(new Page(current, size),articleIds);
+    }
 }

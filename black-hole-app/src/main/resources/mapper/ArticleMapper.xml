@@ -85,13 +85,36 @@
         u.id = a.user_id
         where
             1=1
+            <if test="articleIds != null and articleIds.size() > 0">
+                and
+                    a.id in
+                        <foreach collection="articleIds" index="index" item="item" separator="," open="(" close=")">
+                            #{item}
+                        </foreach>
+            </if>
+
+        order by update_time desc
+
+    </select>  <!--and-->
+<!--    a.user_id = #{userId}-->
+
+    <select id="queryCommentArticles" resultMap="aritcleVo">
+        select a.*,u.nick_name,u.avatar_url
+        from
+        t_f_article a
+        left join
+        t_f_user u
+        on
+        u.id = a.user_id
+        where
+        1=1
+        <if test="articleIds != null and articleIds.size() > 0">
             and
-                a.id in
-                    <foreach collection="articleIds" index="index" item="item" separator="," open="(" close=")">
-                        #{item}
-                    </foreach>
-            and
-                a.user_id = #{userId}
+            a.id in
+            <foreach collection="articleIds" index="index" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         order by update_time desc
 
     </select>
