@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 import static com.free.badmood.blackhole.constant.CommonConstant.USER_LIST_SUPPORT_ARTICLE_PREFIX;
 
 @Component
@@ -59,6 +61,8 @@ public class RedisAritcleSupport {
         String key = USER_LIST_SUPPORT_ARTICLE_PREFIX + articleId;
         return setOperations.size(key);
     }
+
+
 
 
 

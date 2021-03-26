@@ -9,6 +9,7 @@ import com.free.badmood.blackhole.web.entity.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -30,6 +31,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
      */
 
     List<ArticleRes> getResUrls(long articleId);
+
+    Page<ArticleVo> querySupportAndCollectArticles(Page page, long userId, Set<Object> articleIds);
 //    long querySupportCount();
 
 }

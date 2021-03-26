@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Slf4j
 @SpringBootTest()
@@ -35,7 +38,19 @@ public class Test {
 //        log.error(userCommentVoIPage.toString());
 
 
-        Page<ArticleVo> articleVoPage = articleService.queryIndexArticle(10, 1,0,1);
+//        Page<ArticleVo> articleVoPage = articleService.queryIndexArticle(10, 1,0,1);
+//        log.error(articleVoPage.toString());
+
+        Set<Object> articles = new HashSet<>();
+        articles.add(123L);
+        articles.add(124L);
+        articles.add(125L);
+        articles.add(126L);
+        articles.add(127L);
+        Page<ArticleVo> articleVoPage = articleService.querySupportAndCollectArticles(10, 1, 24, articles);
         log.error(articleVoPage.toString());
     }
+
+
+
 }

@@ -6,6 +6,8 @@ import com.free.badmood.blackhole.web.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.free.badmood.blackhole.web.entity.ArticleVo;
 
+import java.util.Set;
+
 /**
  * <p>
  *  服务类
@@ -25,7 +27,5 @@ public interface IArticleService extends IService<Article> {
     Page<ArticleVo> queryIndexArticle(int count,int page,int type,int scope);
 
 
-
-
-
+    Page<ArticleVo> querySupportAndCollectArticles(int size,int current,long userId, Set<Object> articleIds);
 }

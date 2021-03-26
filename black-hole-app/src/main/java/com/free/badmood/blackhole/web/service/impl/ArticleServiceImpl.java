@@ -14,6 +14,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 /**
  * <p>
  *  服务实现类
@@ -74,5 +76,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         }
          return articleMapper.queryIndexArticle(new Page(current, size),type,scope,userId);
+    }
+
+    @Override
+    public Page<ArticleVo> querySupportAndCollectArticles(int size,int current,long userId, Set<Object> articleIds) {
+        return articleMapper.querySupportAndCollectArticles(new Page(current, size),userId,articleIds);
     }
 }

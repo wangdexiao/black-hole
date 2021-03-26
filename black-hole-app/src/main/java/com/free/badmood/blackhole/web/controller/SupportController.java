@@ -6,6 +6,7 @@ import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
+import com.free.badmood.blackhole.config.redisconfig.RedisUserSupport;
 import com.free.badmood.blackhole.constant.SupportType;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
@@ -63,13 +64,16 @@ public class SupportController extends BaseController {
 
     private RedisAritcleSupport redisAritcleSupport;
 
+    private final RedisUserSupport redisUserSupport;
+
     public SupportController(
              ISupportService supportService,
              IArticleService articleService,
              UserInfoContext userInfoContext,
              ILikeService likeService,
              IBrowseService browseService,
-             RedisAritcleSupport redisAritcleSupport) {
+             RedisAritcleSupport redisAritcleSupport,
+             RedisUserSupport redisUserSupport) {
 
         this.supportService = supportService;
         this.articleService = articleService;
@@ -77,6 +81,7 @@ public class SupportController extends BaseController {
         this.userInfoContext = userInfoContext;
         this.browseService = browseService;
         this.redisAritcleSupport = redisAritcleSupport;
+        this.redisUserSupport = redisUserSupport;
     }
 
 
@@ -119,12 +124,14 @@ public class SupportController extends BaseController {
             if(redisAritcleSupport.existArticleSupport(userId, articleId)){
 
                 redisAritcleSupport.canleArticleSupport(articleId,userId);
+                redisUserSupport.canleUserSuport(userId,articleId);
                 return Result.ok("已经点过赞，已经取消点赞","cancel");
 
                 //已经点过赞，又取消了 =》 点赞
             }else {//没有点过赞（redis数据库就没数据）=》点赞
 
                 redisAritcleSupport.addArticleSupport(articleId,userId);
+                redisUserSupport.addUserSupport(userId,articleId);
                 return Result.okData("ok") ;
             }
 
