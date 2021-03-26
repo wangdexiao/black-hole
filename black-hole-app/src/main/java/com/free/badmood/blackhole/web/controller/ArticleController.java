@@ -81,8 +81,8 @@ public class ArticleController extends BaseController {
     @RequestMapping("/add")
     @RequireAuthentication
     public Result<Article> addArticle(ArticleVo articleVo){
-        String openid = UnionIdContext.UNIONID.get();
-        User user = userService.queryUserByOpenId(openid); //微信openid
+        String unionId = UnionIdContext.UNIONID.get();
+        User user = userService.queryUserByUnionId(unionId); //微信openid
         articleVo.setUserId(user.getId());//用户id
         articleVo.setReadCount(0);//默认阅读数为0
         articleVo.setLatitude("0");//设置经纬度

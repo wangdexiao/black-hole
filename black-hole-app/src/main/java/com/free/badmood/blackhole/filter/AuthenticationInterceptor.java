@@ -37,9 +37,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        String unionId = null;
+
         //需不需要认证的接口都读取设置下openid
-        String openid = ((HttpServletRequest) request).getHeader("openid");
-        UnionIdContext.UNIONID.set(openid);
+        String token = ((HttpServletRequest) request).getHeader("token");
+        if(StringUtils.hasLength(token)){
+            unionId = JWT.decode(token).getAudience().get(0);
+            UnionIdContext.UNIONID.set(unionId);
+        }
+
 
         boolean needAuthentication;
         if (handler != null) {
@@ -51,10 +57,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     Class clazz = handlerMethod.getMethod().getDeclaringClass();
                     needAuthentication = clazz.isAnnotationPresent(RequireAuthentication.class);
                     if(needAuthentication){
-                        return hasAuthentication(request, response);
+                        return hasAuthentication(request, response,unionId);
                     }
                 }else {
-                    return hasAuthentication(request, response);
+                    return hasAuthentication(request, response,unionId);
                 }
 
 
@@ -71,35 +77,27 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      * @return
      * @throws IOException
      */
-    private boolean hasAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private boolean hasAuthentication(HttpServletRequest request, HttpServletResponse response,String unionId) throws IOException {
 
         String token = ((HttpServletRequest) request).getHeader("token");
 
-        // 是否存在该用户，该用户已经注册过了
-        if(StringUtils.hasLength(token)){
-            String unionId = JWT.decode(token).getAudience().get(0);
-            UnionIdContext.UNIONID.set(unionId);
-            if(userInfoContext.existUserInfo(unionId)){
+
+        if(userInfoContext.existUserInfo(unionId)){
 //                UnionIdContext.UNIONID.set(unionId);
-                // 验证 token
-                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
-                try {
-                    jwtVerifier.verify(token);
-                } catch (JWTVerificationException e) {
-                    e.printStackTrace();
-                    return401(response);
-                    return false;
-                }
-            }else {
+            // 验证 token
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
+            try {
+                jwtVerifier.verify(token);
+            } catch (JWTVerificationException e) {
+                e.printStackTrace();
                 return401(response);
                 return false;
             }
-            return true;
-
         }else {
             return401(response);
             return false;
         }
+        return true;
     }
 
     public void return401(HttpServletResponse response) throws IOException {
