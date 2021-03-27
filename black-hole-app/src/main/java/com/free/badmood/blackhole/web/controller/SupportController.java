@@ -5,22 +5,25 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.MsgRunnable;
+import com.free.badmood.blackhole.config.redisconfig.PublisherService;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserSupport;
 import com.free.badmood.blackhole.constant.SupportType;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Like;
+import com.free.badmood.blackhole.web.entity.Msg;
 import com.free.badmood.blackhole.web.entity.Support;
 import com.free.badmood.blackhole.web.entity.User;
-import com.free.badmood.blackhole.web.service.IArticleService;
-import com.free.badmood.blackhole.web.service.IBrowseService;
-import com.free.badmood.blackhole.web.service.ILikeService;
-import com.free.badmood.blackhole.web.service.ISupportService;
+import com.free.badmood.blackhole.web.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * <p>
@@ -66,6 +69,18 @@ public class SupportController extends BaseController {
 
     private final RedisUserSupport redisUserSupport;
 
+    private final PublisherService publisherService;
+
+
+    private IMsgService msgService;
+
+
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
+
+    @Autowired
+    private IUserService userService;
+
     public SupportController(
              ISupportService supportService,
              IArticleService articleService,
@@ -73,7 +88,9 @@ public class SupportController extends BaseController {
              ILikeService likeService,
              IBrowseService browseService,
              RedisAritcleSupport redisAritcleSupport,
-             RedisUserSupport redisUserSupport) {
+             RedisUserSupport redisUserSupport,
+             IMsgService msgService,
+             PublisherService publisherService) {
 
         this.supportService = supportService;
         this.articleService = articleService;
@@ -82,6 +99,8 @@ public class SupportController extends BaseController {
         this.browseService = browseService;
         this.redisAritcleSupport = redisAritcleSupport;
         this.redisUserSupport = redisUserSupport;
+        this.msgService = msgService;
+        this.publisherService = publisherService;
     }
 
 
@@ -125,6 +144,9 @@ public class SupportController extends BaseController {
 
                 redisAritcleSupport.canleArticleSupport(articleId,userId);
                 redisUserSupport.canleUserSuport(userId,articleId);
+
+                threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,0,articleId, userId));
+
                 return Result.ok("已经点过赞，已经取消点赞","cancel");
 
                 //已经点过赞，又取消了 =》 点赞
@@ -132,6 +154,7 @@ public class SupportController extends BaseController {
 
                 redisAritcleSupport.addArticleSupport(articleId,userId);
                 redisUserSupport.addUserSupport(userId,articleId);
+                threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,1,articleId, userId));
                 return Result.okData("ok") ;
             }
 
