@@ -33,6 +33,11 @@ public class ArticleVo extends Article{
     private long commentCount;
 
     /**
+     * 当前文黯的转发数量
+     */
+    private long forwardCount;
+
+    /**
      * 当前当前用户是否已经点赞了该文黯
      */
     private boolean currentUserSupport;

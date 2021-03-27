@@ -1,7 +1,6 @@
 package com.free.badmood.blackhole.config.redisconfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +59,17 @@ public class RedisAritcleSupport {
     public long sizeArticleSupport(long articleId){
         String key = USER_LIST_SUPPORT_ARTICLE_PREFIX + articleId;
         return setOperations.size(key);
+    }
+
+
+    /**
+     * 该文黯的用户李彪
+     * @param articleId 文黯id
+     * @return
+     */
+    public Set<Object> memberArticleSupport(long articleId){
+        String key = USER_LIST_SUPPORT_ARTICLE_PREFIX + articleId;
+        return setOperations.members(key);
     }
 
 
