@@ -118,6 +118,21 @@
         order by update_time desc
 
     </select>
+    <select id="queryArticleDetailById" resultMap="aritcleVo">
+
+
+        select a.*,u.nick_name,u.avatar_url
+			from
+			    t_f_article a
+            left join
+                t_f_user u
+            on
+                u.id = a.user_id
+            where
+                1=1
+                and
+                    a.id = #{articleId}
+    </select>
 
 
 </mapper>

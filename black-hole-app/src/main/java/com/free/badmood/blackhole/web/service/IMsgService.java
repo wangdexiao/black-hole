@@ -3,6 +3,7 @@ package com.free.badmood.blackhole.web.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.web.entity.Msg;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.free.badmood.blackhole.web.entity.MsgVo;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ import java.util.List;
  */
 public interface IMsgService extends IService<Msg> {
 
-    IPage<Msg> queryMsg(int size,int current);
+    IPage<MsgVo> queryMsg(int size, int current);
 }

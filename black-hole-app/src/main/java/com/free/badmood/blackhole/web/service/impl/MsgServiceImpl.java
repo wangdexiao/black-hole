@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Msg;
+import com.free.badmood.blackhole.web.entity.MsgVo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.mapper.MsgMapper;
 import com.free.badmood.blackhole.web.service.IMsgService;
@@ -31,14 +32,17 @@ public class MsgServiceImpl extends ServiceImpl<MsgMapper, Msg> implements IMsgS
 
 
     @Override
-    public IPage<Msg> queryMsg(int size,int current) {
+    public IPage<MsgVo> queryMsg(int size,int current) {
         User userInfo = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         long userId = userInfo.getId();
-        Page<Msg> page = page(new Page<>(current, size),
-                Wrappers.<Msg>lambdaQuery()
-                        .eq(Msg::getStatus, 0)
-                        .eq(Msg::getDestUserId, userId)
-                        .orderByDesc(Msg::getUpdateTime));
-        return page;
+
+        IPage<MsgVo> msgVoIPage = getBaseMapper().queryMsg(new Page(current,size),userId);
+
+//        Page<Msg> page = page(new Page<>(current, size),
+//                Wrappers.<Msg>lambdaQuery()
+//                        .eq(Msg::getStatus, 0)
+//                        .eq(Msg::getDestUserId, userId)
+//                        .orderByDesc(Msg::getUpdateTime));
+        return msgVoIPage;
     }
 }

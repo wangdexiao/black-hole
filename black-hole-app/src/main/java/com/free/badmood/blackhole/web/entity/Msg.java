@@ -19,6 +19,9 @@ public class Msg extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+
+    private Long fromUserId;
+
     /**
      * 发送给那个用户的id
      */

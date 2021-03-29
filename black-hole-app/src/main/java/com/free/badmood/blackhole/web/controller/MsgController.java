@@ -7,6 +7,7 @@ import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Msg;
+import com.free.badmood.blackhole.web.entity.MsgVo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.IMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class MsgController extends BaseController {
 
     @PostMapping("/get")
     @RequireAuthentication
-    public Result<IPage<Msg>> queryMsg(int size,int current){
+    public Result<IPage<MsgVo>> queryMsg(int size, int current){
 
-        IPage<Msg> msgListPage = msgService.queryMsg(size,current);
+        IPage<MsgVo> msgListPage = msgService.queryMsg(size,current);
 
         return msgListPage == null ? Result.fail("获取消息失败"): Result.okData(msgListPage);
     }

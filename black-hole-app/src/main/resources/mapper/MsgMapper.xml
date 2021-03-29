@@ -2,4 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.free.badmood.blackhole.web.mapper.MsgMapper">
 
+
+
+    <resultMap id="msgVo" type="com.free.badmood.blackhole.web.entity.MsgVo">
+        <id property="id" column="id" javaType="long"/>
+        <result property="fromUserId" column="form_user_id" javaType="long"/>
+        <result property="destUserId" column="dest_user_id" javaType="long"/>
+        <result property="content" column="content" javaType="string"/>
+        <result property="status" column="status" javaType="java.lang.Integer"/>
+        <result property="type" column="type" javaType="string"/>
+        <result property="linkId" column="link_id" javaType="java.lang.Long"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="del" column="del"/>
+        <association property="fromUserInfo" resultMap="com.free.badmood.blackhole.web.mapper.ArticleMapper.User">
+
+        </association>
+        <association property="articleVo"
+                     column="link_id"
+                     select="com.free.badmood.blackhole.web.mapper.ArticleMapper.queryArticleDetailById"/>
+
+
+    </resultMap>
+
+    <select id="queryMsg" resultMap="msgVo">
+
+        select m.*,u.avatar_url,u.nick_name
+        from t_f_msg m
+            left join
+                t_f_user u
+            on m.from_user_id = u.id
+            where dest_user_id = #{destUserId}
+            order by update_time desc
+
+    </select>
 </mapper>

@@ -1,4 +1,4 @@
-package com.free.badmod.blackhole.plusgen;
+package com.free.badmood.blackhole.plusgen;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;

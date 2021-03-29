@@ -25,6 +25,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     Page<ArticleVo> queryIndexArticle(Page page,int type,int scope,long userId);
 
+
+    ArticleVo queryArticleDetailById(long articleId);
+
     /**
      *
      * @param articleId 文黯id

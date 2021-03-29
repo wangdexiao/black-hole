@@ -35,6 +35,7 @@ public class MsgRunnable implements Runnable{
     @Override
     public void run() {
         Msg msg = new Msg();
+        msg.setFromUserId(userId);
         Article article = articleService.getById(articleId);
         long desUserId = article.getUserId();
         msg.setDestUserId(desUserId);
