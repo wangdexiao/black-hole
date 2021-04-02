@@ -1,5 +1,6 @@
 package com.free.badmood.blackhole.web.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.web.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,5 +26,8 @@ public interface IUserService extends IService<User> {
     default User queryUserByOpenId(String openId){
         return null;
     }
+
+
+    IPage<User> getUserListSupportArticle(int current,int size,long articleId);
 
 }

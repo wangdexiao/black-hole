@@ -1,5 +1,7 @@
 package com.free.badmood.blackhole.web.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
@@ -87,4 +89,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public Page<ArticleVo> queryCommentArticles(int size,int current, Set<Object> articleIds) {
         return articleMapper.queryCommentArticles(new Page(current, size),articleIds);
     }
+
+
+//    @Override
+//    public IPage<User> getUserListSupportArticle(int size,int current,long articleId) {
+//        page(new Page<>(current,size), Wrappers.<User>lambdaQuery().in())
+//        return null;
+//    }
 }

@@ -1,6 +1,7 @@
 package com.free.badmood.blackhole.web.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,6 +41,7 @@ import java.util.Set;
 @Slf4j
 @RestController
 @RequestMapping("/article")
+@Validated
 public class ArticleController extends BaseController {
 
     @Value("${upload-res-photo-dir}")
@@ -221,6 +224,12 @@ public class ArticleController extends BaseController {
 
         Page<ArticleVo> articleVoPage = articleService.queryCommentArticles(count, page, articleIds);
         return articleVoPage != null ? Result.okData(articleVoPage) : Result.fail("获取文黯失败！", null);
+    }
+
+    @PostMapping("/support/userlist")
+    public Result<IPage<User>> userListSupportArticle(int current, int size, long articleId){
+        IPage<User> userListSupportArticle = userService.getUserListSupportArticle(current, size, articleId);
+        return userListSupportArticle != null ? Result.okData(userListSupportArticle) : Result.fail("获取赞列表失败！");
     }
 
 }
