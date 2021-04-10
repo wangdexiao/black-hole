@@ -60,6 +60,7 @@ public class CertificationController {
     }
 
 
+
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result<TokenInfo> login(String code){
         TokenInfo tokenInfo = null;
@@ -100,6 +101,8 @@ public class CertificationController {
 
                     //已经授权登录过了，就相当于已经注册过了，返回token（需要unionid）
                     if(dbUser != null){
+                        //todo 先拿openid 当unionid 使用
+                        dbUser.setUnionid(wxCreditInfoEntity.getOpenid());
                         dbUser.setOpenId(wxCreditInfoEntity.getOpenid());
                         dbUser.setSessionKey(wxCreditInfoEntity.getSessionKey());
                         userInfoContext.addUserInfo(dbUser);

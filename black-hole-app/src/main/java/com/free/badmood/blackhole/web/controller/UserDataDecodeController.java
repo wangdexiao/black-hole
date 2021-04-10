@@ -50,28 +50,59 @@ public class UserDataDecodeController extends BaseController {
         this.tokenService = tokenService;
     }
 
-    /**
-     * 解密用户信息（通过session_key（不能放到前端））
-     * @param iv iv
-     * @param rawData 加密的用户数据
-     * @return User
-     */
+//    /**
+//     * 有关联的时候 有unionid的时候用这个
+//     * 解密用户信息（通过session_key（不能放到前端））
+//     * @param iv iv
+//     * @param rawData 加密的用户数据
+//     * @return User
+//     */
+//    @PostMapping(value = "/userinfo2")
+//    @RequireAuthentication
+//    public Result<TokenInfo> decodeUserInfo(String iv, String rawData){
+//        TokenInfo token = null;
+//        String wxAppId = environment.getProperty(CommonConstant.WX_APPID);
+//        String unionId = UnionIdContext.UNIONID.get();
+//        User falseUser = userInfoContext.getUserInfoByUnionId(unionId);
+//        log.info("sessionKey為：" + falseUser.getSessionKey());
+//        log.info("wxAppId為：" + wxAppId);
+//        log.info("rawData為：" + rawData);
+//        log.info("iv為：" + iv);
+//        String decrypt = WXCore.decrypt(wxAppId, rawData, falseUser.getSessionKey(), iv);
+//        log.info("解密得到的用户信息为：" + decrypt);
+//        User userInfo = JSONObject.parseObject(decrypt, User.class);
+//        userInfo.setSessionKey(falseUser.getSessionKey());
+//        userInfo.setAvatarUrl(userInfo.getAvatarUrl());
+//        //todo 其实是openid 开放平台没有关联 认证需300 没认证  =》暂拿openid当unionid使吧
+//        userInfo.setUnionid(unionId);
+//        User dbUser = tfUserService.queryUserByUnionId(userInfo.getUnionid());
+//        //已经存在该用户信息
+//        if (dbUser != null){
+//            userInfo.setId(dbUser.getId());
+//        }
+//        //添加或更新用户信息
+//        boolean saved = tfUserService.saveOrUpdate(userInfo);
+//        userInfoContext.addUserInfo(userInfo);
+//        if(saved){
+//            token = tokenService.getToken(userInfo);
+//        }
+//
+//
+//        return token !=null ? Result.okData(token) : Result.fail("获取token失败",null);
+//    }
+
+
     @PostMapping(value = "/userinfo")
     @RequireAuthentication
-    public Result<TokenInfo> decodeUserInfo(String iv, String rawData){
+    public Result<TokenInfo> saveUserInfo(User userInfo){
         TokenInfo token = null;
-        String wxAppId = environment.getProperty(CommonConstant.WX_APPID);
         String unionId = UnionIdContext.UNIONID.get();
         User falseUser = userInfoContext.getUserInfoByUnionId(unionId);
-        log.info("sessionKey為：" + falseUser.getSessionKey());
-        log.info("wxAppId為：" + wxAppId);
-        log.info("rawData為：" + rawData);
-        log.info("iv為：" + iv);
-        String decrypt = WXCore.decrypt(wxAppId, rawData, falseUser.getSessionKey(), iv);
-        log.info("解密得到的用户信息为：" + decrypt);
-        User userInfo = JSONObject.parseObject(decrypt, User.class);
+
         userInfo.setSessionKey(falseUser.getSessionKey());
-        userInfo.setAvatarUrl(userInfo.getAvatarUrl());
+        //todo 其实是openid 开放平台没有关联 认证需300 没认证  =》暂拿openid当unionid使吧
+        userInfo.setUnionid(unionId);
+        userInfo.setOpenId(unionId);
         User dbUser = tfUserService.queryUserByUnionId(userInfo.getUnionid());
         //已经存在该用户信息
         if (dbUser != null){
@@ -85,11 +116,8 @@ public class UserDataDecodeController extends BaseController {
         }
 
 
+
         return token !=null ? Result.okData(token) : Result.fail("获取token失败",null);
     }
 
-
-    /**
-     * 获取文黯的点赞用户列表
-     */
 }

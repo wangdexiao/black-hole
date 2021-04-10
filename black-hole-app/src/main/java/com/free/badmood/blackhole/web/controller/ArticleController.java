@@ -69,9 +69,9 @@ public class ArticleController extends BaseController {
     private final RedisUserComment redisUserComment;
 
     public ArticleController(IArticleService articleService, IArticleResService articleResService,
-                             IUserService userService,RedisAritcleSupport redisAritcleSupport,
+                             IUserService userService, RedisAritcleSupport redisAritcleSupport,
                              RedisAritcleCollect redisAritcleCollect,
-                             RedisUserFocus redisUserFocus,UserInfoContext userInfoContext,
+                             RedisUserFocus redisUserFocus, UserInfoContext userInfoContext,
                              RedisUserSupport redisUserSupport,
                              RedisUserComment redisUserComment) {
         this.articleService = articleService;
@@ -87,12 +87,13 @@ public class ArticleController extends BaseController {
 
     /**
      * 添加文黯
+     *
      * @param articleVo 文黯实体
      * @return Article
      */
     @RequestMapping("/add")
     @RequireAuthentication
-    public Result<Article> addArticle(ArticleVo articleVo){
+    public Result<Article> addArticle(ArticleVo articleVo) {
         String unionId = UnionIdContext.UNIONID.get();
         User user = userService.queryUserByUnionId(unionId); //微信openid
         articleVo.setUserId(user.getId());//用户id
@@ -106,7 +107,7 @@ public class ArticleController extends BaseController {
         //组装资源记录
         List<ArticleRes> photoList = articleVo.getResList();
 //        final List<ArticleRes> articleResList = new ArrayList<>();
-        if(saved){
+        if (saved) {
             long articleId = articleVo.getId();
             photoList.forEach(item -> {
                 String url = item.getUrl();
@@ -118,14 +119,14 @@ public class ArticleController extends BaseController {
 
             // 保存文黯资源记录
             boolean savedRes = articleResService.saveBatch(photoList);
-            if(savedRes){
+            if (savedRes) {
                 return Result.okData(articleVo);
-            }else {
+            } else {
                 articleService.removeById(articleVo.getId());
-                return Result.fail("发布文黯失败,保存资源文黯失败！",articleVo);
+                return Result.fail("发布文黯失败,保存资源文黯失败！", articleVo);
             }
-        }else {
-            return Result.fail("发布文黯失败,保存文黯记录失败",articleVo);
+        } else {
+            return Result.fail("发布文黯失败,保存文黯记录失败", articleVo);
         }
 
     }
@@ -144,19 +145,19 @@ public class ArticleController extends BaseController {
 //    }
 
 
-
     /**
      * 获取文黯
-     * @param page 页码数
+     *
+     * @param page  页码数
      * @param count 每页数量
-     * @param  type //1-代表视频 0-代表普通文黯
-     * @param  scope //1-公开 0-仅自己可见
+     * @param type  //1-代表视频 0-代表普通文黯
+     * @param scope //1-公开 0-仅自己可见
      * @return Page<Article>
      */
     @RequestMapping("/get")
-    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page,int type,int scope){
+    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope) {
 
-        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count,page,type,scope);
+        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope);
         List<ArticleVo> records = aritcleByPage.getRecords();
 
 
@@ -167,16 +168,16 @@ public class ArticleController extends BaseController {
             long supportCount = redisAritcleSupport.sizeArticleSupport(aritcleId);
             it.setSupportCount(supportCount);
 
-            boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId,aritcleId);
+            boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId, aritcleId);
             //当前用户是否点赞了
             it.setCurrentUserSupport(currentUserSupport);
 
-            boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId,aritcleId);
+            boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId, aritcleId);
             it.setCurrentUserCollect(currentUserCollect);
 
-            if(StringUtils.hasLength(UnionIdContext.UNIONID.get())){
+            if (StringUtils.hasLength(UnionIdContext.UNIONID.get())) {
                 User currentUser = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
-                long currentUserId =  currentUser.getId();
+                long currentUserId = currentUser.getId();
                 it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
             }
 
@@ -187,13 +188,14 @@ public class ArticleController extends BaseController {
 
     /**
      * 查询我点过赞和收藏的文黯
+     *
      * @param count
      * @param page
      * @return
      */
     @PostMapping("/personal/support/collect/get")
     @RequireAuthentication
-    public Result<Page<ArticleVo>> querySupportAndCollectArticles(int count, int page){
+    public Result<Page<ArticleVo>> querySupportAndCollectArticles(int count, int page) {
         //合并点过赞的文黯id 和 收藏的文黯id
 
         User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
@@ -206,19 +208,20 @@ public class ArticleController extends BaseController {
 
     /**
      * 查询我评论过的文黯
+     *
      * @param count
      * @param page
      * @return
      */
     @PostMapping("/personal/comment/get")
     @RequireAuthentication
-    public Result<Page<ArticleVo>> queryCommnetArticles(int count, int page){
+    public Result<Page<ArticleVo>> queryCommnetArticles(int count, int page) {
         //合并点过赞的文黯id 和 收藏的文黯id
 
         User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
         long userId = user.getId();
         Set<Object> articleIds = redisUserComment.memberUserCommentArticleId(userId);
-        if(CollectionUtils.isEmpty(articleIds)){
+        if (CollectionUtils.isEmpty(articleIds)) {
             return Result.okData(new Page<>(page, count, 0, true));
         }
 
@@ -227,7 +230,7 @@ public class ArticleController extends BaseController {
     }
 
     @PostMapping("/support/userlist")
-    public Result<IPage<User>> userListSupportArticle(int current, int size, long articleId){
+    public Result<IPage<User>> userListSupportArticle(int current, int size, long articleId) {
         IPage<User> userListSupportArticle = userService.getUserListSupportArticle(current, size, articleId);
         return userListSupportArticle != null ? Result.okData(userListSupportArticle) : Result.fail("获取赞列表失败！");
     }
