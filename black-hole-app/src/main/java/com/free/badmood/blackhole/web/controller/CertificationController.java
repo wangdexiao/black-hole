@@ -105,6 +105,7 @@ public class CertificationController {
                         dbUser.setUnionid(wxCreditInfoEntity.getOpenid());
                         dbUser.setOpenId(wxCreditInfoEntity.getOpenid());
                         dbUser.setSessionKey(wxCreditInfoEntity.getSessionKey());
+
                         userInfoContext.addUserInfo(dbUser);
                         //这种情况才有unionid（已经解密过用户信息）
                         tokenInfo =  tokenService.getToken(dbUser);

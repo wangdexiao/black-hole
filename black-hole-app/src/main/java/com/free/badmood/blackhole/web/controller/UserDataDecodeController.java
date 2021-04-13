@@ -11,6 +11,8 @@ import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.TokenInfo;
 import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.entity.UserVo;
+import com.free.badmood.blackhole.web.entity.WxPhoneNumEntity;
 import com.free.badmood.blackhole.web.service.ITokenService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +96,7 @@ public class UserDataDecodeController extends BaseController {
 
     @PostMapping(value = "/userinfo")
     @RequireAuthentication
-    public Result<TokenInfo> saveUserInfo(User userInfo){
+    public Result<TokenInfo> saveUserInfo(UserVo userInfo){
         TokenInfo token = null;
         String unionId = UnionIdContext.UNIONID.get();
         User falseUser = userInfoContext.getUserInfoByUnionId(unionId);
@@ -103,6 +105,13 @@ public class UserDataDecodeController extends BaseController {
         //todo 其实是openid 开放平台没有关联 认证需300 没认证  =》暂拿openid当unionid使吧
         userInfo.setUnionid(unionId);
         userInfo.setOpenId(unionId);
+        //解密手机号
+        String wxAppId = environment.getProperty(CommonConstant.WX_APPID);
+        String decrypt = WXCore.decrypt(wxAppId, userInfo.getPhoneEncryptedData(), falseUser.getSessionKey(), userInfo.getPhoneIv());
+        log.error("解密得到的用户信息为：" + decrypt);
+        WxPhoneNumEntity phoneNumEntity = JSONObject.parseObject(decrypt, WxPhoneNumEntity.class);
+        userInfo.setPhoneNum(phoneNumEntity.getPurePhoneNumber());
+
         User dbUser = tfUserService.queryUserByUnionId(userInfo.getUnionid());
         //已经存在该用户信息
         if (dbUser != null){

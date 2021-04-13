@@ -38,6 +38,8 @@ public class User extends BaseEntity {
 
     private String city;
 
+    private String phoneNum;
+
 
 
 
