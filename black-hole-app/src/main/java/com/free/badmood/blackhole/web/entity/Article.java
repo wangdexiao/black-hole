@@ -1,11 +1,5 @@
 package com.free.badmood.blackhole.web.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.free.badmood.blackhole.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -69,6 +63,27 @@ public class Article extends BaseEntity {
      * 文黯类型(0文黯，1视频)
      */
     private int type;
+
+    /**
+     * 文黯标签标签：
+     * 0 : 自卑
+     * 1：无聊
+     * 2： 丧
+     * 3： 恐惧
+     * 4： 失望
+     * 5： 迷茫
+     * 6： 嫉妒
+     * 7： 自责
+     * 8： 忧愁
+     * 9： 穷
+     */
+    private int tag;
+
+
+    /**
+     * 话题   #坦白局 我承认我自卑，我真的很怕黑
+     */
+    private String topic;
 
 
 //    //文章相关联的资源url地址 （vo数据，前端展示）

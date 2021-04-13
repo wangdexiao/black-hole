@@ -98,8 +98,8 @@ public class ArticleController extends BaseController {
         User user = userService.queryUserByUnionId(unionId); //微信openid
         articleVo.setUserId(user.getId());//用户id
         articleVo.setReadCount(0);//默认阅读数为0
-        articleVo.setLatitude("0");//设置经纬度
-        articleVo.setLongitude("0");//
+//        articleVo.setLatitude("0");//设置经纬度
+//        articleVo.setLongitude("0");//
         //保存文黯记录
         boolean saved = articleService.save(articleVo);
 
