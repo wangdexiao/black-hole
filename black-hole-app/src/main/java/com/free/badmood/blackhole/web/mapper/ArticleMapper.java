@@ -23,7 +23,7 @@ import java.util.Set;
 public interface ArticleMapper extends BaseMapper<Article> {
 
 
-    Page<ArticleVo> queryIndexArticle(Page page,int type,int scope,long userId);
+    Page<ArticleVo> queryIndexArticle(Page page,int type,int scope,int tag,long userId);
 
 
     ArticleVo queryArticleDetailById(long articleId);

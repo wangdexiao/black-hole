@@ -70,14 +70,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //    }
 
     @Override
-    public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope) {
+    public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope,int tag) {
         long userId = -1;
         if(scope == 2){
             User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
             userId = user.getId();
 
         }
-         return articleMapper.queryIndexArticle(new Page(current, size),type,scope,userId);
+         return articleMapper.queryIndexArticle(new Page(current, size),type,scope,tag,userId);
     }
 
     @Override

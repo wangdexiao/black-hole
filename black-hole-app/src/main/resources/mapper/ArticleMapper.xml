@@ -49,6 +49,8 @@
                 r.article_id = #{articleId}
     </select>
 
+    <!--type: 2-查询所有（文黯，视频）1-代表视频 0-代表普通文黯-->
+    <!--scope: 2-查询所有（文黯，视频）1-公开 0-仅自己可见 ；不会出现只查询仅自己可见的-->
     <select id="queryIndexArticle" resultMap="aritcleVo">
 
         select a.*,u.nick_name,u.avatar_url
@@ -70,6 +72,9 @@
 
                 <if test="scope != 2">
                     and scope = 1
+                </if>
+                <if test="tag >= 0">
+                    and tag = #{tag}
                 </if>
             order by update_time desc
 
