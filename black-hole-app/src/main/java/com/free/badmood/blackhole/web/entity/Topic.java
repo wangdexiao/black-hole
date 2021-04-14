@@ -22,7 +22,12 @@ public class Topic extends BaseEntity {
     /**
      * 话题内容
      */
-    private String name;
+    private String text;
+
+    /**
+     * 话题简介
+     */
+    private String intro;
 
     /**
      * 相关话题文黯的数量
@@ -34,9 +39,7 @@ public class Topic extends BaseEntity {
      */
     private Long createUserId;
 
-    private LocalDateTime createTime;
 
-    private LocalDateTime updateTime;
 
 
 }

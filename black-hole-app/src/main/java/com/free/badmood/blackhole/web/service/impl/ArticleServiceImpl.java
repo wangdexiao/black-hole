@@ -70,7 +70,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //    }
 
     @Override
-    public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope,int tag) {
+    public Page<ArticleVo> queryIndexArticle(int size, int current,int type,int scope,int tag,String topic) {
         long userId = -1;
         if(scope == 2){
             User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());

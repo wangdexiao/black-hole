@@ -26,6 +26,8 @@
         <result property="longitude" column="longitude" javaType="string"/>
         <result property="scope" column="scope" javaType="java.lang.Integer"/>
         <result property="type" column="type" javaType="java.lang.Integer"/>
+        <result property="tag" column="tag" javaType="java.lang.Integer"/>
+        <result property="topic" column="topic" javaType="java.lang.String"/>
         <result property="supportCount" column="support_count"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>

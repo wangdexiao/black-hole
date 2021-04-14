@@ -2,6 +2,7 @@ package com.free.badmood.blackhole.web.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
@@ -9,12 +10,10 @@ import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.redisconfig.*;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
-import com.free.badmood.blackhole.web.entity.Article;
-import com.free.badmood.blackhole.web.entity.ArticleRes;
-import com.free.badmood.blackhole.web.entity.ArticleVo;
-import com.free.badmood.blackhole.web.entity.User;
+import com.free.badmood.blackhole.web.entity.*;
 import com.free.badmood.blackhole.web.service.IArticleResService;
 import com.free.badmood.blackhole.web.service.IArticleService;
+import com.free.badmood.blackhole.web.service.ITopicService;
 import com.free.badmood.blackhole.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +53,8 @@ public class ArticleController extends BaseController {
 
     private final IArticleResService articleResService;
 
+    private final ITopicService topicService;
+
     private final IUserService userService;
 
     private final RedisAritcleSupport redisAritcleSupport;
@@ -73,7 +74,8 @@ public class ArticleController extends BaseController {
                              RedisAritcleCollect redisAritcleCollect,
                              RedisUserFocus redisUserFocus, UserInfoContext userInfoContext,
                              RedisUserSupport redisUserSupport,
-                             RedisUserComment redisUserComment) {
+                             RedisUserComment redisUserComment,
+                             ITopicService topicService) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
@@ -83,6 +85,7 @@ public class ArticleController extends BaseController {
         this.userInfoContext = userInfoContext;
         this.redisUserSupport = redisUserSupport;
         this.redisUserComment = redisUserComment;
+        this.topicService = topicService;
     }
 
     /**
@@ -103,6 +106,18 @@ public class ArticleController extends BaseController {
         //保存文黯记录
         boolean saved = articleService.save(articleVo);
 
+        //todo 保存话题 暂时不强制保存成功
+        if(StringUtils.hasLength(articleVo.getTopic())){
+            Topic dbTopic = topicService.getOne(Wrappers.<Topic>lambdaQuery().eq(Topic::getText, articleVo.getTopic()));
+            if(dbTopic != null){
+                Topic topic = new Topic();
+                topic.setText(articleVo.getTopic());
+                topic.setArticleCount(0L);//相关文黯数量
+                topic.setCreateUserId(user.getId());//
+                boolean saveTopicFlag = topicService.save(topic);
+                log.error("保存话题成功"+ saveTopicFlag);
+            }
+        }
 
         //组装资源记录
         List<ArticleRes> photoList = articleVo.getResList();
@@ -155,9 +170,9 @@ public class ArticleController extends BaseController {
      * @return Page<Article>
      */
     @RequestMapping("/get")
-    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag) {
+    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag,String topic) {
 
-        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag);
+        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic);
         List<ArticleVo> records = aritcleByPage.getRecords();
 
 

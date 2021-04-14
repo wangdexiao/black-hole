@@ -24,7 +24,7 @@ public interface IArticleService extends IService<Article> {
 //    }
 
 
-    Page<ArticleVo> queryIndexArticle(int count,int page,int type,int scope,int tag);
+    Page<ArticleVo> queryIndexArticle(int count,int page,int type,int scope,int tag,String topic);
 
 
     Page<ArticleVo> querySupportAndCollectArticles(int size,int current,long userId, Set<Object> articleIds);
