@@ -172,6 +172,7 @@ public class ArticleController extends BaseController {
     @RequestMapping("/get")
     public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag,String topic) {
 
+        log.error("首页获取数据"+topic);
         Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic);
         List<ArticleVo> records = aritcleByPage.getRecords();
 
