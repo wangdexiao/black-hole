@@ -1,7 +1,7 @@
 spring:
   redis:
     database: 0
-    host: 119.45.14.75
+    host: 172.22.0.8 #内网ip地址
     port: 6379
     password: Wdx123123123.
     jedis:
