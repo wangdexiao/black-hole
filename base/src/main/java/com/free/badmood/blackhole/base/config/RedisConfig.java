@@ -21,11 +21,7 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.redis")
-    public JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
-    }
+
 
 
     @Bean(name = "redisTemplate")
