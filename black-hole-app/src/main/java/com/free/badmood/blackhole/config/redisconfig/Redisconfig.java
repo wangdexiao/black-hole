@@ -3,6 +3,7 @@ package com.free.badmood.blackhole.config.redisconfig;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -11,12 +12,14 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 //import redis.clients.jedis.JedisPoolConfig;
 
+@Slf4j
 @Configuration
 public class Redisconfig {
 
@@ -36,6 +39,9 @@ public class Redisconfig {
 
     @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        LettuceConnectionFactory connectionFactory = (LettuceConnectionFactory) factory;
+        String password = connectionFactory.getPassword();
+        log.error("redis的认证密码为：" + password);
         // 创建RedisTemplate<String, Object>对象
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 配置连接工厂
