@@ -1,5 +1,6 @@
 package com.free.badmood.blackhole.config.redisconfig;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import static com.free.badmood.blackhole.constant.CommonConstant.USER_LIST_SUPPORT_ARTICLE_PREFIX;
 
+@Slf4j
 @Component
 public class RedisAritcleSupport {
 
@@ -26,7 +28,8 @@ public class RedisAritcleSupport {
      */
     public void addArticleSupport(long articleId,long userId){
         String key = USER_LIST_SUPPORT_ARTICLE_PREFIX + articleId;
-        setOperations.add(key, userId);
+        long flag = setOperations.add(key, userId);
+        log.error("redis点赞返回结果" + flag);
     }
 
 
