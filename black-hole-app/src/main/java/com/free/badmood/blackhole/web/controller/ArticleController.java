@@ -97,24 +97,34 @@ public class ArticleController extends BaseController {
     @RequestMapping("/add")
     @RequireAuthentication
     public Result<Article> addArticle(ArticleVo articleVo) {
+        log.error("添加文黯开始时间:"+System.currentTimeMillis());
+
         String unionId = UnionIdContext.UNIONID.get();
+        log.error("查询用户开始时间:"+System.currentTimeMillis());
         User user = userService.queryUserByUnionId(unionId); //微信openid
+        log.error("查询用户结束始时间:"+System.currentTimeMillis());
         articleVo.setUserId(user.getId());//用户id
         articleVo.setReadCount(0);//默认阅读数为0
 //        articleVo.setLatitude("0");//设置经纬度
 //        articleVo.setLongitude("0");//
         //保存文黯记录
+        log.error("保存文黯开始时间:"+System.currentTimeMillis());
         boolean saved = articleService.save(articleVo);
+        log.error("保存文黯结束时间:"+System.currentTimeMillis());
 
         //todo 保存话题 暂时不强制保存成功
         if(StringUtils.hasLength(articleVo.getTopic())){
+            log.error("查询话题开始时间:"+System.currentTimeMillis());
             Topic dbTopic = topicService.getOne(Wrappers.<Topic>lambdaQuery().eq(Topic::getText, articleVo.getTopic()));
+            log.error("查询话题结束时间:"+System.currentTimeMillis());
             if(dbTopic != null){
                 Topic topic = new Topic();
                 topic.setText(articleVo.getTopic());
                 topic.setArticleCount(0L);//相关文黯数量
                 topic.setCreateUserId(user.getId());//
+                log.error("保存话题开始时间:"+System.currentTimeMillis());
                 boolean saveTopicFlag = topicService.save(topic);
+                log.error("保存话题结束时间:"+System.currentTimeMillis());
                 log.error("保存话题成功"+ saveTopicFlag);
             }
         }
@@ -133,14 +143,20 @@ public class ArticleController extends BaseController {
             });
 
             // 保存文黯资源记录
+            log.error("保存文黯资源开始时间:"+System.currentTimeMillis());
             boolean savedRes = articleResService.saveBatch(photoList);
+            log.error("保存文黯资源结束时间:"+System.currentTimeMillis());
             if (savedRes) {
                 return Result.okData(articleVo);
             } else {
+                log.error("删除文黯开始时间:"+System.currentTimeMillis());
                 articleService.removeById(articleVo.getId());
+                log.error("删除文黯结束时间:"+System.currentTimeMillis());
+                log.error("添加文黯结束时间:"+System.currentTimeMillis());
                 return Result.fail("发布文黯失败,保存资源文黯失败！", articleVo);
             }
         } else {
+            log.error("添加文黯结束时间:"+System.currentTimeMillis());
             return Result.fail("发布文黯失败,保存文黯记录失败", articleVo);
         }
 
