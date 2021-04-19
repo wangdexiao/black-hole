@@ -140,9 +140,9 @@
             <properties>
                 <spring.profiles.active>production</spring.profiles.active>
             </properties>
-                        <activation>
-                            <activeByDefault>true</activeByDefault>
-                        </activation>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
 
 
