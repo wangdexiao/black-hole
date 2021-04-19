@@ -15,23 +15,24 @@ import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.JedisPoolConfig;
+//import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 public class Redisconfig {
 
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.redis")
-    public JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix="spring.redis.jedis.pool")
-    public JedisPoolConfig jedisPoolConfig() {
-        return new JedisPoolConfig();
-    }
+//    @Bean
+//    @ConfigurationProperties(prefix = "spring.redis")
+//    public JedisConnectionFactory jedisConnectionFactory() {
+//        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+//        return jedisConnectionFactory;
+//    }
+//
+//    @Bean
+//    @ConfigurationProperties(prefix="spring.redis.jedis.pool")
+//    public JedisPoolConfig jedisPoolConfig() {
+//        return new JedisPoolConfig();
+//    }
 
     @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
