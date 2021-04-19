@@ -188,8 +188,11 @@ public class ArticleController extends BaseController {
     @RequestMapping("/get")
     public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag,String topic) {
 
+        log.error("首页查询文黯开始时间:"+System.currentTimeMillis());
         log.error("首页获取数据"+topic);
+        log.error("首页分页查询文黯开始时间:"+System.currentTimeMillis());
         Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic);
+        log.error("首页分页查询文黯结束时间:"+System.currentTimeMillis());
         List<ArticleVo> records = aritcleByPage.getRecords();
 
 
@@ -197,24 +200,35 @@ public class ArticleController extends BaseController {
             long aritcleId = it.getId();
             long userId = it.getUserId();
 
+            log.error("首页redis查询文黯点赞个数开始时间:"+System.currentTimeMillis());
             long supportCount = redisAritcleSupport.sizeArticleSupport(aritcleId);
+            log.error("首页redis查询文黯点赞个数结束时间:"+System.currentTimeMillis());
             it.setSupportCount(supportCount);
 
+            log.error("首页redis查询文黯当前用户是否点赞开始时间:"+System.currentTimeMillis());
             boolean currentUserSupport = redisAritcleSupport.existArticleSupport(userId, aritcleId);
+            log.error("首页redis查询文黯当前用户是否点赞结束时间:"+System.currentTimeMillis());
             //当前用户是否点赞了
             it.setCurrentUserSupport(currentUserSupport);
 
+            log.error("首页redis查询文黯被收藏个数开始时间:"+System.currentTimeMillis());
             boolean currentUserCollect = redisAritcleCollect.existCollectArticle(userId, aritcleId);
+            log.error("首页redis查询文黯被收藏个数结束时间:"+System.currentTimeMillis());
             it.setCurrentUserCollect(currentUserCollect);
 
             if (StringUtils.hasLength(UnionIdContext.UNIONID.get())) {
+                log.error("首页查询当前用户信息开始时间:"+System.currentTimeMillis());
                 User currentUser = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
+                log.error("首页查询当前用户信息结束时间:"+System.currentTimeMillis());
                 long currentUserId = currentUser.getId();
+                log.error("首页redis查询当前用户是否关注了该文黯的用户开始时间:"+System.currentTimeMillis());
                 it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
+                log.error("首页redis查询当前用户是否关注了该文黯的用户结束时间:"+System.currentTimeMillis());
             }
 
             it.setCommentCount(10);
         });
+        log.error("首页查询文黯结束时间:"+System.currentTimeMillis());
         return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
     }
 
