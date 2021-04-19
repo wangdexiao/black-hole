@@ -187,9 +187,9 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping("/get")
     public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag,String topic) {
+        log.error("首页获取数据"+topic);
 
         log.error("首页查询文黯开始时间:"+System.currentTimeMillis());
-        log.error("首页获取数据"+topic);
         log.error("首页分页查询文黯开始时间:"+System.currentTimeMillis());
         Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic);
         log.error("首页分页查询文黯结束时间:"+System.currentTimeMillis());

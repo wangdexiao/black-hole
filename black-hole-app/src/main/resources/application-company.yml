@@ -37,8 +37,9 @@ spring:
 #          password: Wdx123123123.
 #          driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
         master:
-          url: jdbc:mysql://rm-2ze6u2746349q467olo.mysql.rds.aliyuncs.com:3306/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-          #url: jdbc:mysql://172.21.0.12:3306/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          #url: jdbc:mysql://rm-2ze6u2746349q467olo.mysql.rds.aliyuncs.com:3306/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          #url: jdbc:mysql://bj-cdb-2m3q6wh6.sql.tencentcdb.com:60798/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+          url: jdbc:mysql://127.0.0.1:3306/black_hole?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
           username: root
           password: Wdx123123123
           driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置

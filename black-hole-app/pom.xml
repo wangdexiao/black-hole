@@ -130,12 +130,13 @@
         <!--company 配置-->
         <profile>
             <id>company</id>
-<!--            <activation>-->
-<!--                <activeByDefault>true</activeByDefault>-->
-<!--            </activation>-->
+
             <properties>
                 <spring.profiles.active>company</spring.profiles.active>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
 
 
@@ -145,9 +146,9 @@
             <properties>
                 <spring.profiles.active>production</spring.profiles.active>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
         </profile>
 
 
