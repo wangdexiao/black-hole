@@ -117,7 +117,7 @@ public class ArticleController extends BaseController {
             log.error("查询话题开始时间:"+System.currentTimeMillis());
             Topic dbTopic = topicService.getOne(Wrappers.<Topic>lambdaQuery().eq(Topic::getText, articleVo.getTopic()));
             log.error("查询话题结束时间:"+System.currentTimeMillis());
-            if(dbTopic != null){
+            if(dbTopic == null){
                 Topic topic = new Topic();
                 topic.setText(articleVo.getTopic());
                 topic.setArticleCount(0L);//相关文黯数量
