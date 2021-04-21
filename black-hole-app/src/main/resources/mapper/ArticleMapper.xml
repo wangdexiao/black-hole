@@ -27,6 +27,7 @@
         <result property="scope" column="scope" javaType="java.lang.Integer"/>
         <result property="type" column="type" javaType="java.lang.Integer"/>
         <result property="tag" column="tag" javaType="java.lang.Integer"/>
+        <result property="topicId" column="topic_id" javaType="java.lang.Long"/>
         <result property="topic" column="topic" javaType="java.lang.String"/>
         <result property="supportCount" column="support_count"/>
         <result property="createTime" column="create_time"/>
@@ -77,6 +78,9 @@
                 </if>
                 <if test="tag >= 0">
                     and tag = #{tag}
+                </if>
+                <if test="topicId > 0">
+                    and topic_id = #{topicId}
                 </if>
             order by update_time desc
 

@@ -86,6 +86,12 @@ public class Article extends BaseEntity {
     private String topic;
 
 
+    /**
+     * 话题id
+     */
+    private long topicId;
+
+
 //    //文章相关联的资源url地址 （vo数据，前端展示）
 //    @TableField(exist = false)
 //    private List<String> resList;

@@ -107,15 +107,14 @@ public class ArticleController extends BaseController {
         articleVo.setReadCount(0);//默认阅读数为0
 //        articleVo.setLatitude("0");//设置经纬度
 //        articleVo.setLongitude("0");//
-        //保存文黯记录
-        log.error("保存文黯开始时间:"+System.currentTimeMillis());
-        boolean saved = articleService.save(articleVo);
-        log.error("保存文黯结束时间:"+System.currentTimeMillis());
+
 
         //todo 保存话题 暂时不强制保存成功
+        long topicId = -1;
         if(StringUtils.hasLength(articleVo.getTopic())){
             log.error("查询话题开始时间:"+System.currentTimeMillis());
             Topic dbTopic = topicService.getOne(Wrappers.<Topic>lambdaQuery().eq(Topic::getText, articleVo.getTopic()));
+            topicId = dbTopic.getId();
             log.error("查询话题结束时间:"+System.currentTimeMillis());
             if(dbTopic == null){
                 Topic topic = new Topic();
@@ -126,8 +125,14 @@ public class ArticleController extends BaseController {
                 boolean saveTopicFlag = topicService.save(topic);
                 log.error("保存话题结束时间:"+System.currentTimeMillis());
                 log.error("保存话题成功"+ saveTopicFlag);
+                topicId = topic.getId();
             }
         }
+        articleVo.setTopicId(topicId);
+        //保存文黯记录
+        log.error("保存文黯开始时间:"+System.currentTimeMillis());
+        boolean saved = articleService.save(articleVo);
+        log.error("保存文黯结束时间:"+System.currentTimeMillis());
 
         //组装资源记录
         List<ArticleRes> photoList = articleVo.getResList();
@@ -186,12 +191,19 @@ public class ArticleController extends BaseController {
      * @return Page<Article>
      */
     @RequestMapping("/get")
-    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,int tag,String topic) {
+    public Result<Page<ArticleVo>> queryArticleByPage(int count, int page, int type, int scope,Integer tag,String topic,Long topicId) {
+        if(topicId == null){
+            topicId = 0L;
+        }
+        if(tag == null){
+            tag = -1;
+        }
+
         log.error("首页获取数据"+topic);
 
         log.error("首页查询文黯开始时间:"+System.currentTimeMillis());
         log.error("首页分页查询文黯开始时间:"+System.currentTimeMillis());
-        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic);
+        Page<ArticleVo> aritcleByPage = articleService.queryIndexArticle(count, page, type, scope,tag,topic,topicId);
         log.error("首页分页查询文黯结束时间:"+System.currentTimeMillis());
         List<ArticleVo> records = aritcleByPage.getRecords();
 
