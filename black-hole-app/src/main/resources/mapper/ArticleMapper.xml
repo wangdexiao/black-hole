@@ -22,8 +22,8 @@
         <result property="content" column="content" javaType="string"/>
         <result property="addressName" column="address_name" javaType="string"/>
         <result property="addressDetail" column="address_detail" javaType="string"/>
-        <result property="latitude" column="latitude" javaType="string"/>
-        <result property="longitude" column="longitude" javaType="string"/>
+        <result property="latitude" column="latitude" javaType="java.math.BigDecimal"/>
+        <result property="longitude" column="longitude" javaType="java.math.BigDecimal"/>
         <result property="scope" column="scope" javaType="java.lang.Integer"/>
         <result property="type" column="type" javaType="java.lang.Integer"/>
         <result property="tag" column="tag" javaType="java.lang.Integer"/>

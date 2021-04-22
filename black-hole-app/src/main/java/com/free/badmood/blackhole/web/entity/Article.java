@@ -4,6 +4,8 @@ import com.free.badmood.blackhole.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 
@@ -46,12 +48,12 @@ public class Article extends BaseEntity {
     /**
      * 地理位置经度
      */
-    private String latitude;
+    private BigDecimal latitude;
 
     /**
      * 地理位置维度
      */
-    private String longitude;
+    private BigDecimal longitude;
 
 
     /**
