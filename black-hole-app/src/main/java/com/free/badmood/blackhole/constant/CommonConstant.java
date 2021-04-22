@@ -14,4 +14,5 @@ public interface CommonConstant {
     String SUPPORT_ARTICLE_LIST_BYUSER = "SUPPORT_ARTICLE_LIST_BYUSER"; //（（用户点赞的文章列表）key） 前缀
     String FOCUS_USER_LIST_BYUSER = "FOCUS_USER_LIST_BYUSER"; //（用户关注的用户列表）key 前缀
     String FANS_USER_LIST_TOUSER = "FANS_USER_LIST_TOUSER"; //（关注用户的粉丝列表）key 前缀
+    String ARTICLE_COMMENT_COUNT = "ARTICLE_COMMENT_COUNT"; //文黯评论的数量
 }

@@ -12,6 +12,9 @@ import java.util.List;
 import static com.free.badmood.blackhole.constant.CommonConstant.COMMENT_LIST_ARTICLE_PREFIX;
 import static com.free.badmood.blackhole.constant.CommonConstant.USER_LIST_SUPPORT_ARTICLE_PREFIX;
 
+/**
+ * redis 存储文黯有哪些评论(不太需要有个统计数据就可以了)
+ */
 @Component
 public class RedisAritcleComment {
 

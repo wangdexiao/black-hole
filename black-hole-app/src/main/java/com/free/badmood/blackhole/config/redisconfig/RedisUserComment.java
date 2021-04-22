@@ -43,7 +43,7 @@ public class RedisUserComment {
     }
 
     /**
-     * 删除用户评论的文黯id
+     * 用户评论了哪些文黯
      * @param userId 用户id
      */
     public Set<Object> memberUserCommentArticleId(long userId){

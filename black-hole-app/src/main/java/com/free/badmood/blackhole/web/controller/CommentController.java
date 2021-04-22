@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.controller.BaseController;
 import com.free.badmood.blackhole.base.entity.Result;
+import com.free.badmood.blackhole.config.redisconfig.RedisAritcleCount;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserComment;
 import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
@@ -34,11 +35,17 @@ public class CommentController extends BaseController {
     private final UserInfoContext userInfoContext;
 
     private final RedisUserComment redisUserComment;
+    private final RedisAritcleCount redisAritcleCount;
 
-    public CommentController(ICommentService commentService, UserInfoContext userInfoContext,RedisUserComment redisUserComment) {
+
+
+    public CommentController(ICommentService commentService, UserInfoContext userInfoContext,
+                             RedisUserComment redisUserComment,
+                             RedisAritcleCount redisAritcleCount) {
         this.commentService = commentService;
         this.userInfoContext = userInfoContext;
         this.redisUserComment = redisUserComment;
+        this.redisAritcleCount = redisAritcleCount;
     }
 
 
@@ -55,6 +62,7 @@ public class CommentController extends BaseController {
         boolean savedFlag = commentService.save(comment);
         if(savedFlag){
             redisUserComment.addUserCommentArticleId(comment.getArticleId(),userInfo.getId());
+            redisAritcleCount.increCount(comment.getArticleId());
         }
 
         return savedFlag ? Result.okData(true) : Result.fail(-1, "添加评论失败！");

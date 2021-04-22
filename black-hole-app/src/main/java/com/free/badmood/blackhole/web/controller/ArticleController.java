@@ -69,13 +69,16 @@ public class ArticleController extends BaseController {
 
     private final RedisUserComment redisUserComment;
 
+    private final RedisAritcleCount redisAritcleCount;
+
     public ArticleController(IArticleService articleService, IArticleResService articleResService,
                              IUserService userService, RedisAritcleSupport redisAritcleSupport,
                              RedisAritcleCollect redisAritcleCollect,
                              RedisUserFocus redisUserFocus, UserInfoContext userInfoContext,
                              RedisUserSupport redisUserSupport,
                              RedisUserComment redisUserComment,
-                             ITopicService topicService) {
+                             ITopicService topicService,
+                             RedisAritcleCount redisAritcleCount) {
         this.articleService = articleService;
         this.articleResService = articleResService;
         this.userService = userService;
@@ -86,6 +89,7 @@ public class ArticleController extends BaseController {
         this.redisUserSupport = redisUserSupport;
         this.redisUserComment = redisUserComment;
         this.topicService = topicService;
+        this.redisAritcleCount = redisAritcleCount;
     }
 
     /**
@@ -228,17 +232,18 @@ public class ArticleController extends BaseController {
             log.error("首页redis查询文黯被收藏个数结束时间:"+System.currentTimeMillis());
             it.setCurrentUserCollect(currentUserCollect);
 
-            if (StringUtils.hasLength(UnionIdContext.UNIONID.get())) {
-                log.error("首页查询当前用户信息开始时间:"+System.currentTimeMillis());
-                User currentUser = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
-                log.error("首页查询当前用户信息结束时间:"+System.currentTimeMillis());
-                long currentUserId = currentUser.getId();
-                log.error("首页redis查询当前用户是否关注了该文黯的用户开始时间:"+System.currentTimeMillis());
-                it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
-                log.error("首页redis查询当前用户是否关注了该文黯的用户结束时间:"+System.currentTimeMillis());
-            }
+            //todo 首页不显示 是否关注了该用户，点击头像在显示是否关注该用户
+//            if (StringUtils.hasLength(UnionIdContext.UNIONID.get())) {
+//                log.error("首页查询当前用户信息开始时间:"+System.currentTimeMillis());
+//                User currentUser = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
+//                log.error("首页查询当前用户信息结束时间:"+System.currentTimeMillis());
+//                long currentUserId = currentUser.getId();
+//                log.error("首页redis查询当前用户是否关注了该文黯的用户开始时间:"+System.currentTimeMillis());
+//                it.setHasFocusUser(redisUserFocus.existUserFocus(currentUserId, userId));
+//                log.error("首页redis查询当前用户是否关注了该文黯的用户结束时间:"+System.currentTimeMillis());
+//            }
 
-            it.setCommentCount(10);
+            it.setCommentCount(redisAritcleCount.getCount(aritcleId));
         });
         log.error("首页查询文黯结束时间:"+System.currentTimeMillis());
         return aritcleByPage != null ? Result.okData(aritcleByPage) : Result.fail("获取文黯失败！", null);
