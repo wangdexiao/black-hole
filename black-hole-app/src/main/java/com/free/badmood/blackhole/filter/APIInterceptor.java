@@ -53,7 +53,7 @@
 //                    throw new RuntimeException("用户不存在，请重新登录");
 //                }
 //                // 验证 token
-//                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getUnionid())).build();
+//                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
 //                try {
 //                    jwtVerifier.verify(token);
 //                } catch (JWTVerificationException e) {

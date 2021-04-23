@@ -3,6 +3,7 @@ package com.free.badmood.blackhole.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
 import com.free.badmood.blackhole.base.entity.Result;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static com.free.badmood.blackhole.web.service.ITokenService.SECRET;
 
 /**
  * 判断是否认证拦截器
@@ -42,8 +45,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         //需不需要认证的接口都读取设置下openid
         String token = ((HttpServletRequest) request).getHeader("token");
         if(StringUtils.hasLength(token)){
-            unionId = JWT.decode(token).getAudience().get(0);
-            UnionIdContext.UNIONID.set(unionId);
+            try{
+                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
+                DecodedJWT verify = jwtVerifier.verify(token);
+                unionId = verify.getAudience().get(0);
+                UnionIdContext.UNIONID.set(unionId);
+            }catch (Exception exception){
+                return401(response);
+                return false;
+            }
+
         }
 
 
@@ -85,7 +96,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(userInfoContext.existUserInfo(unionId)){
 //                UnionIdContext.UNIONID.set(unionId);
             // 验证 token
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
             try {
                 jwtVerifier.verify(token);
             } catch (JWTVerificationException e) {

@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import static com.free.badmood.blackhole.web.service.ITokenService.SECRET;
+
 
 /**
  * 认证
@@ -145,7 +147,7 @@ public class CertificationController {
         String unionId = JWT.decode(token).getAudience().get(0);
 
         // 验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(unionId)).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
         try {
             jwtVerifier.verify(token);
         } catch (JWTVerificationException e) {

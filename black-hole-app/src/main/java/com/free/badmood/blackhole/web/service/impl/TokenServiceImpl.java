@@ -3,6 +3,7 @@ package com.free.badmood.blackhole.web.service.impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.free.badmood.blackhole.web.entity.TokenInfo;
 import com.free.badmood.blackhole.web.entity.User;
@@ -10,25 +11,30 @@ import com.free.badmood.blackhole.web.service.ITokenService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
 public class TokenServiceImpl implements ITokenService {
 
 
+
     public TokenInfo getToken(User user) {
         Date start = new Date();
         //一小时有效时间
-        long expiresIn = 24 * 60 * 60 * 1000;
+        long expiresIn = 30 * 24 * 3600 * 1000;
 //        long expiresIn =   5 * 1000;
         long currentTime = System.currentTimeMillis() + expiresIn;
         Date end = new Date(currentTime);
         String token;
         //以用户的云信id做唯一标识
-        token = JWT.create().withAudience(user.getUnionid())
-                .withIssuedAt(start)
-                .withExpiresAt(end)
-                .sign(Algorithm.HMAC256(user.getUnionid()));
+        token = JWT.create()
+                .withJWTId(UUID.randomUUID().toString())//随机生成一个id
+                .withIssuer("blacksoundhole.com")//发行者
+                .withAudience(user.getUnionid())//观众（不知道啥意思）
+                .withIssuedAt(start)//发行时间
+                .withExpiresAt(end)//过期时间
+                .sign(Algorithm.HMAC256(SECRET));
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setLoginName(user.getUnionid());
         tokenInfo.setToken(token);
@@ -52,9 +58,9 @@ public class TokenServiceImpl implements ITokenService {
         Thread.sleep(2000);
 
         // 验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getUnionid())).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
         try {
-            jwtVerifier.verify(token.getToken());
+            DecodedJWT verify = jwtVerifier.verify(token.getToken());
             System.out.println("第一次验证通过");
         } catch (JWTVerificationException e) {
             e.printStackTrace();
