@@ -22,7 +22,7 @@ public class TokenServiceImpl implements ITokenService {
     public TokenInfo getToken(User user) {
         Date start = new Date();
         //一小时有效时间
-        long expiresIn = 30 * 24 * 3600 * 1000;
+        long expiresIn = 30L * 24 * 3600 * 1000;
 //        long expiresIn =   5 * 1000;
         long currentTime = System.currentTimeMillis() + expiresIn;
         Date end = new Date(currentTime);
