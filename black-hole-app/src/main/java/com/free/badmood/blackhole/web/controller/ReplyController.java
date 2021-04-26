@@ -59,10 +59,10 @@ public class ReplyController extends BaseController {
         reply.setFromUserId(userId);
 
         if(ReplyType.REPLY_COMMENT.ordinal() == reply.getReplyType()){
-            Comment comment = commentService.getById(reply.getReplyId());
-            long toUserId = comment.getFromUserId();
-            reply.setToUserId(toUserId);
-            reply.setCommentId(comment.getId());
+//            Comment comment = commentService.getById(reply.getCommentId());
+//            long toUserId = comment.getFromUserId();
+//            reply.setToUserId(toUserId);
+//            reply.setCommentId(comment.getId());
         }else {
             //根据什么查询出要回复的这条回复的内容，根据什么字段根据目标id replyId
             Reply replyReply = replyService.getById(reply.getReplyId());

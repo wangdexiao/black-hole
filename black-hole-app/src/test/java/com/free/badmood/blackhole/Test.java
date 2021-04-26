@@ -11,6 +11,7 @@ import com.free.badmood.blackhole.web.mapper.MsgMapper;
 import com.free.badmood.blackhole.web.service.IArticleService;
 import com.free.badmood.blackhole.web.service.ICommentService;
 import com.free.badmood.blackhole.web.service.IUserService;
+import com.free.badmood.blackhole.web.service.IWxSendMsgService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class Test {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private IWxSendMsgService wxSendMsgService;
+
     @org.junit.Test
     public void test(){
 
@@ -60,10 +64,13 @@ public class Test {
 //        articles.add(127L);
 //        Page<ArticleVo> articleVoPage = articleService.querySupportAndCollectArticles(10, 1, 24, articles);
 //        log.error(articleVoPage.toString());
-        ArticleVo articleVo = articleMapper.queryArticleDetailById(143L);
+//        ArticleVo articleVo = articleMapper.queryArticleDetailById(143L);
+//
+//        IPage<MsgVo> msgVoIPage = msgMapper.queryMsg(new Page(1, 10), 34);
+//        log.error("单元测试结果：" + msgVoIPage.getRecords().toString());
 
-        IPage<MsgVo> msgVoIPage = msgMapper.queryMsg(new Page(1, 10), 34);
-        log.error("单元测试结果：" + msgVoIPage.getRecords().toString());
+        boolean b = wxSendMsgService.sendMsg();
+        log.error("发送消息是否成功：" + b);
     }
 
 
