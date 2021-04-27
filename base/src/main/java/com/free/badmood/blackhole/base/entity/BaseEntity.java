@@ -33,6 +33,9 @@ public abstract class BaseEntity implements Serializable {
     @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    @TableField(value = "create_user_id",fill = FieldFill.INSERT_UPDATE)
+    private long createUserId;
+
 
     @TableLogic(/*value = "1",delval = "0"*/)
     private int del;

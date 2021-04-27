@@ -15,4 +15,5 @@ public interface CommonConstant {
     String FOCUS_USER_LIST_BYUSER = "FOCUS_USER_LIST_BYUSER"; //（用户关注的用户列表）key 前缀
     String FANS_USER_LIST_TOUSER = "FANS_USER_LIST_TOUSER"; //（关注用户的粉丝列表）key 前缀
     String ARTICLE_COMMENT_COUNT = "ARTICLE_COMMENT_COUNT"; //文黯评论的数量
+    String OBJECT_USERINFO = "OBJECT_USERINFO"; //用户对象
 }

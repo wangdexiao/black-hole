@@ -1,12 +1,11 @@
 package com.free.badmood.blackhole.context;
 
+import com.free.badmood.blackhole.config.redisconfig.RedisUserInfo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class UserInfoContext {
@@ -15,19 +14,23 @@ public class UserInfoContext {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private RedisUserInfo redisUserInfo;
+
     //key 為unionID
-    private ConcurrentHashMap<String, User> userInfoMap = new ConcurrentHashMap<>();
+//    @Deprecated 使用redis替代
+//    private ConcurrentHashMap<String, User> userInfoMap = new ConcurrentHashMap<>();
 
     public boolean addUserInfo(User user){
         if (StringUtils.hasLength(user.getUnionid())) {
             removeUserInfo(user.getUnionid());
-            userInfoMap.put(user.getUnionid(), user);
+            redisUserInfo.addUserInfo(user.getUnionid(), user);
         }
         return true;
     }
 
     public boolean removeUserInfo(String unionId){
-        userInfoMap.remove(unionId);
+        redisUserInfo.delUserInfo(unionId);
         return true;
     }
 
@@ -36,7 +39,7 @@ public class UserInfoContext {
     public boolean existUserInfo(String unionId){
         if(StringUtils.hasLength(unionId)){
 
-            User user = userInfoMap.get(unionId);
+            User user = redisUserInfo.queryUserInfo(unionId);
             if(user == null ){
                 user = userService.queryUserByUnionId(unionId);
                 if(user != null){
@@ -64,7 +67,7 @@ public class UserInfoContext {
     public User getUserInfoByUnionId(String unionId){
         User user;
         if(StringUtils.hasLength(unionId)){
-            user = userInfoMap.get(unionId);
+            user = redisUserInfo.queryUserInfo(unionId);
             if (user == null){
                 user = userService.queryUserByUnionId(unionId);
                 addUserInfo(user);
@@ -80,19 +83,19 @@ public class UserInfoContext {
 
 
     //key為openid
-    private ConcurrentHashMap<String, User> openIdUserInfoMap = new ConcurrentHashMap<>();
+//    private ConcurrentHashMap<String, User> openIdUserInfoMap = new ConcurrentHashMap<>();
 
-    public boolean addUserInfoByOpenId(User user){
-        if (StringUtils.hasLength(user.getOpenId())) {
-            removeUserInfoByOpenId(user.getOpenId());
-            openIdUserInfoMap.put(user.getUnionid(), user);
-        }
-        return true;
-    }
+//    public boolean addUserInfoByOpenId(User user){
+//        if (StringUtils.hasLength(user.getOpenId())) {
+//            removeUserInfoByOpenId(user.getOpenId());
+//            openIdUserInfoMap.put(user.getUnionid(), user);
+//        }
+//        return true;
+//    }
 
 
-    public boolean removeUserInfoByOpenId(String openId){
-        openIdUserInfoMap.remove(openId);
-        return true;
-    }
+//    public boolean removeUserInfoByOpenId(String openId){
+//        openIdUserInfoMap.remove(openId);
+//        return true;
+//    }
 }
