@@ -4,8 +4,8 @@ spring:
 #    host: 172.22.0.8 #内网ip地址
     host: 127.0.0.1 #内网ip地址
     port: 6379
-    password:
-    #url: redis://Wdx123123123.@172.22.0.8:6379
+#    password:
+    url: redis://Wdx123123123.@127.0.0.1:6379
     timeout: 30000 #读取超时时间
     connect-timeout: 60000
     lettuce:
