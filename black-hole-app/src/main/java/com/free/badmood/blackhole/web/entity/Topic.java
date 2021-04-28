@@ -37,7 +37,7 @@ public class Topic extends BaseEntity {
     /**
      * 话题创建人的用户id
      */
-    private Long createUserId;
+    private long createUserId;
 
 
 

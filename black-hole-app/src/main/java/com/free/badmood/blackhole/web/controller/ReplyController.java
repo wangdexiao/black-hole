@@ -1,6 +1,7 @@
 package com.free.badmood.blackhole.web.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.free.badmood.blackhole.annotations.RequireAuthentication;
@@ -10,6 +11,7 @@ import com.free.badmood.blackhole.context.UnionIdContext;
 import com.free.badmood.blackhole.context.UserInfoContext;
 import com.free.badmood.blackhole.web.entity.Comment;
 import com.free.badmood.blackhole.web.entity.Reply;
+import com.free.badmood.blackhole.web.entity.ReplyVo;
 import com.free.badmood.blackhole.web.entity.User;
 import com.free.badmood.blackhole.web.service.ICommentService;
 import com.free.badmood.blackhole.web.service.IReplyService;
@@ -82,13 +84,15 @@ public class ReplyController extends BaseController {
      * @return Page<Reply>
      */
     @PostMapping("/query")
-    public Result<Page<Reply>> queryReplyByPage(int page,int count,long commentId){
-        Page<Reply> replyPage = replyService.getBaseMapper()
-                .selectPage(new Page<>(page, count),
-                        Wrappers.<Reply>lambdaQuery()
-                                .eq(Reply::getCommentId, commentId));
+    public Result<IPage<ReplyVo>> queryReplyByPage(int page,int count,long commentId){
 
-        return replyPage != null ? Result.okData(replyPage) : Result.fail("查询回复失败！");
+        IPage<ReplyVo> replyVoIPage = replyService.queryReplyInfo(page, count, commentId);
+//        Page<Reply> replyPage = replyService.getBaseMapper()
+//                .selectPage(new Page<>(page, count),
+//                        Wrappers.<Reply>lambdaQuery()
+//                                .eq(Reply::getCommentId, commentId));
+
+        return replyVoIPage != null ? Result.okData(replyVoIPage) : Result.fail("查询评论回复失败！");
     }
 
 
