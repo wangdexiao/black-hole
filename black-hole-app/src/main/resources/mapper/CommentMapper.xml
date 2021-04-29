@@ -9,7 +9,7 @@
         from t_f_comment c
             LEFT JOIN
                 t_f_reply r
-            on (r.reply_id = c.id and r.reply_type = 0)
+            on (r.comment_id = c.id and r.reply_type = 0)
             LEFT JOIN
                 t_f_user u
             on
