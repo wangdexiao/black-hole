@@ -8,6 +8,7 @@ import com.free.badmood.blackhole.base.entity.Result;
 import com.free.badmood.blackhole.config.MsgRunnable;
 import com.free.badmood.blackhole.config.redisconfig.PublisherService;
 import com.free.badmood.blackhole.config.redisconfig.RedisAritcleSupport;
+import com.free.badmood.blackhole.config.redisconfig.RedisCommentSupport;
 import com.free.badmood.blackhole.config.redisconfig.RedisUserSupport;
 import com.free.badmood.blackhole.constant.SupportType;
 import com.free.badmood.blackhole.context.UnionIdContext;
@@ -67,9 +68,13 @@ public class SupportController extends BaseController {
 
     private RedisAritcleSupport redisAritcleSupport;
 
+    private RedisCommentSupport redisCommentSupport;
+
     private final RedisUserSupport redisUserSupport;
 
     private final PublisherService publisherService;
+
+    private ICommentService commentService;
 
 
     private IMsgService msgService;
@@ -90,7 +95,9 @@ public class SupportController extends BaseController {
              RedisAritcleSupport redisAritcleSupport,
              RedisUserSupport redisUserSupport,
              IMsgService msgService,
-             PublisherService publisherService) {
+             PublisherService publisherService,
+             RedisCommentSupport redisCommentSupport,
+             ICommentService commentService) {
 
         this.supportService = supportService;
         this.articleService = articleService;
@@ -101,6 +108,8 @@ public class SupportController extends BaseController {
         this.redisUserSupport = redisUserSupport;
         this.msgService = msgService;
         this.publisherService = publisherService;
+        this.redisCommentSupport = redisCommentSupport;
+        this.commentService = commentService;
     }
 
 
@@ -126,42 +135,67 @@ public class SupportController extends BaseController {
         }else{//给评论点赞
 //            todo 只能点一次
             //判断评论是否存在
-            existFlag = supportService.getById(typeId) != null;
-
-            return Result.fail("给评论点赞的需求redis暂时不接");
+            existFlag = commentService.getById(typeId) != null;
         }
 
         //如果存在改文黯或者评论
-        if(existFlag){
-            //获取用户的id
-            User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
-            long userId = user.getId();
-            //设置用户id
-            support.setUserId(userId);
-
-            //已经点过赞
-            if(redisAritcleSupport.existArticleSupport(userId, articleId)){
-
-                redisAritcleSupport.canleArticleSupport(articleId,userId);
-                redisUserSupport.canleUserSuport(userId,articleId);
-
-                threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,0,articleId, userId));
-
-                return Result.ok("已经点过赞，已经取消点赞","cancel");
-
-                //已经点过赞，又取消了 =》 点赞
-            }else {//没有点过赞（redis数据库就没数据）=》点赞
-
-                redisAritcleSupport.addArticleSupport(articleId,userId);
-                redisUserSupport.addUserSupport(userId,articleId);
-                threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,1,articleId, userId));
-                return Result.okData("ok") ;
-            }
-
-        }else{
+        if(!existFlag){
             return Result.fail("不存在该文黯或评论");
         }
+        //获取用户的id
+        User user = userInfoContext.getUserInfoByUnionId(UnionIdContext.UNIONID.get());
+        long userId = user.getId();
+        //设置用户id
+        support.setUserId(userId);
+        if(articleId > 0){
+            return supportArticle(support);
+        }else {
+            return supportComment(support);
+        }
 
+    }
+
+    private Result<String> supportArticle(Support support) {
+
+        long articleId = support.getTypeId();
+        long userId = support.getUserId();
+        //已经点过赞
+        if(redisAritcleSupport.existArticleSupport(userId, articleId)){
+
+            redisAritcleSupport.canleArticleSupport(articleId,userId);
+            redisUserSupport.canleUserSuport(userId,articleId);
+
+            threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,0,articleId, userId));
+
+            return Result.ok("已经点过赞，已经取消点赞","cancel");
+
+            //已经点过赞，又取消了 =》 点赞
+        }else {//没有点过赞（redis数据库就没数据）=》点赞
+
+            redisAritcleSupport.addArticleSupport(articleId,userId);
+            redisUserSupport.addUserSupport(userId,articleId);
+            threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,1,articleId, userId));
+            return Result.okData("ok") ;
+        }
+    }
+
+    private Result<String> supportComment(Support support) {
+        long commentId = support.getTypeId();
+        long userId = support.getUserId();
+        //已经点过赞
+        if(redisCommentSupport.existCommentSupport(userId, commentId)){
+            redisAritcleSupport.canleArticleSupport(commentId,userId);
+            //todo 暂时不发送消息
+//            threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,0,commentId, userId));
+            return Result.ok("已经点过赞，已经取消点赞","cancel");
+
+            //已经点过赞，又取消了 =》 点赞
+        }else {//没有点过赞（redis数据库就没数据）=》点赞
+            redisAritcleSupport.addArticleSupport(commentId,userId);
+            //todo 暂时不发送消息
+//            threadPoolExecutor.submit(new MsgRunnable(publisherService,userService,articleService,1,articleId, userId));
+            return Result.okData("ok") ;
+        }
 
     }
 

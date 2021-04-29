@@ -17,4 +17,6 @@ public class UserCommentVo extends Comment{
 
     private int replyCount;
 
+    private int supportCount;
+
 }

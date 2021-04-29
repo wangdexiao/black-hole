@@ -3,9 +3,41 @@
 <mapper namespace="com.free.badmood.blackhole.web.mapper.CommentMapper">
 
 
-    <select id="queryUserComment" resultType="com.free.badmood.blackhole.web.entity.UserCommentVo">
+    <resultMap id="userCommentVo" type="com.free.badmood.blackhole.web.entity.UserCommentVo">
 
-        SELECT c.*,count(reply_id) as reply_count,u.avatar_url,u.nick_name
+
+        <id property="id" column="id" javaType="long"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date"/>
+        <result property="updateTime" column="update_time" javaType="java.util.Date"/>
+        <result property="del" column="del" javaType="int"/>
+        <result property="articleId" column="article_id" javaType="long"/>
+        <result property="articleType" column="article_type" javaType="java.lang.String"/>
+        <result property="content" column="content" javaType="java.lang.String"/>
+        <result property="fromUserId" column="from_user_id" javaType="long"/>
+        <result property="nickName" column="nick_name" javaType="java.lang.String"/>
+        <result property="avatarUrl" column="avatar_url" javaType="java.lang.String"/>
+        <result property="replyCount" column="reply_count" javaType="int"/>
+        <association property="supportCount" column="id" javaType="java.lang.Integer" select="selectSupportCount"/>
+
+
+    </resultMap>
+
+    <select id="selectSupportCount" resultType="int">
+        select count(1) from t_f_support where type_id = #{commentId} and type = 1
+    </select>
+
+
+    <select id="queryUserComment" resultMap="userCommentVo">
+
+        SELECT c.id as id ,
+        c.create_time ,
+        c.update_time ,
+        c.del as del,
+        c.article_id ,
+        c.article_type,
+        c.content,
+        c.from_user_id,
+        count(reply_id) as reply_count,u.avatar_url,u.nick_name
         from t_f_comment c
             LEFT JOIN
                 t_f_reply r

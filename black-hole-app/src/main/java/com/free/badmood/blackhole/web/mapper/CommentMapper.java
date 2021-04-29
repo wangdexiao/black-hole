@@ -23,4 +23,6 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
     IPage<UserCommentVo> queryUserComment(Page<Comment> page, @Param("articleId") long articleId);
 
+
+    int selectSupportCount(long commentId);
 }
